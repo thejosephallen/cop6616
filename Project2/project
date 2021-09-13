@@ -1,0 +1,1611 @@
+#!/bin/sh
+# This is a shell archive (produced by GNU sharutils 4.7).
+# To extract the files from this archive, save it to some FILE, remove
+# everything before the `#!/bin/sh' line above, then type `sh FILE'.
+#
+lock_dir=_sh23584
+# Made on 2020-03-05 23:44 EST by <n01045721@osprey.unfcsd.unf.edu>.
+# Source directory was `/home/21/n01045721/cop6616/Project2'.
+#
+# Existing files will *not* be overwritten, unless `-c' is specified.
+#
+# This shar contains:
+# length mode       name
+# ------ ---------- ------------------------------------------
+#   3124 -rw-r--r-- doc.txt
+#    125 -rw-r--r-- makefile
+#  17960 -rwxr-xr-x parallel
+#   9448 -rw-r--r-- parallel.c
+#  11056 -rw-r--r-- parallel.o
+#  15784 -rw-rw-r-- results.ods
+#
+MD5SUM=${MD5SUM-md5sum}
+f=`${MD5SUM} --version | egrep '^md5sum .*(core|text)utils'`
+test -n "${f}" && md5check=true || md5check=false
+${md5check} || \
+  echo 'Note: not verifying md5sums.  Consider installing GNU coreutils.'
+save_IFS="${IFS}"
+IFS="${IFS}:"
+gettext_dir=FAILED
+locale_dir=FAILED
+first_param="$1"
+for dir in $PATH
+do
+  if test "$gettext_dir" = FAILED && test -f $dir/gettext \
+     && ($dir/gettext --version >/dev/null 2>&1)
+  then
+    case `$dir/gettext --version 2>&1 | sed 1q` in
+      *GNU*) gettext_dir=$dir ;;
+    esac
+  fi
+  if test "$locale_dir" = FAILED && test -f $dir/shar \
+     && ($dir/shar --print-text-domain-dir >/dev/null 2>&1)
+  then
+    locale_dir=`$dir/shar --print-text-domain-dir`
+  fi
+done
+IFS="$save_IFS"
+if test "$locale_dir" = FAILED || test "$gettext_dir" = FAILED
+then
+  echo=echo
+else
+  TEXTDOMAINDIR=$locale_dir
+  export TEXTDOMAINDIR
+  TEXTDOMAIN=sharutils
+  export TEXTDOMAIN
+  echo="$gettext_dir/gettext -s"
+fi
+if (echo "testing\c"; echo 1,2,3) | grep c >/dev/null
+then if (echo -n test; echo 1,2,3) | grep n >/dev/null
+     then shar_n= shar_c='
+'
+     else shar_n=-n shar_c= ; fi
+else shar_n= shar_c='\c' ; fi
+f=shar-touch.$$
+st1=200112312359.59
+st2=123123592001.59
+st2tr=123123592001.5 # old SysV 14-char limit
+st3=1231235901
+
+if touch -am -t ${st1} ${f} >/dev/null 2>&1 && \
+   test ! -f ${st1} && test -f ${f}; then
+  shar_touch='touch -am -t $1$2$3$4$5$6.$7 "$8"'
+
+elif touch -am ${st2} ${f} >/dev/null 2>&1 && \
+   test ! -f ${st2} && test ! -f ${st2tr} && test -f ${f}; then
+  shar_touch='touch -am $3$4$5$6$1$2.$7 "$8"'
+
+elif touch -am ${st3} ${f} >/dev/null 2>&1 && \
+   test ! -f ${st3} && test -f ${f}; then
+  shar_touch='touch -am $3$4$5$6$2 "$8"'
+
+else
+  shar_touch=:
+  echo
+  ${echo} 'WARNING: not restoring timestamps.  Consider getting and'
+  ${echo} 'installing GNU `touch'\'', distributed in GNU coreutils...'
+  echo
+fi
+rm -f ${st1} ${st2} ${st2tr} ${st3} ${f}
+#
+if test ! -d ${lock_dir}
+then : ; else ${echo} 'lock directory '${lock_dir}' exists'
+  exit 1
+fi
+if mkdir ${lock_dir}
+then ${echo} 'x - created lock directory `'${lock_dir}\''.'
+else ${echo} 'x - failed to create lock directory `'${lock_dir}\''.'
+  exit 1
+fi
+# ============= doc.txt ==============
+if test -f 'doc.txt' && test "$first_param" != -c; then
+  ${echo} 'x -SKIPPING doc.txt (file already exists)'
+else
+${echo} 'x - extracting doc.txt (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'doc.txt' &&
+X
+X		      +---------------------------------------+
+X		      |  COP6616 Parallel Computing Project 2 |
+X		      +---------------------------------------+
+X		      |	     By Joseph Allen on 3/05/20       |
+X		      +----------------------------------------
+X
+X
++----------+
+| Overview |
++----------+
+In this project I wrote multiple C functions of various time complexities and 
+then parallelized them using OpenMP. I then evaluated the benefits of parallel
+programming by comparing executions times of these functions for varying amounts
+of data and varying numbers of processors.
+X
++-------------+
+| Source Code |
++-------------+
+The code for this project is all included in the single file named parallel.c.
+I've included a makefile for compiling this source code with the necessary 
+libraries. To run this program, simply run make and then run the resulting 
+executable. Note that the executable takes two command line arguments: 
+X	1) option: the option/function to run
+X		- 0 = return the first element in the array
+X		- 1 = linear search for a random item in the array
+X		- 2 = bubble sort the array
+X		- 3 = perform matrix multiplication 
+X	2) N: the size/length of the array to test on (NxN for matrices)
+This program will execute the desired option and return the execution time.
+The number of threads to use and whether the results of the functions should be
+printed can be changed by modifying the two variables at the beginning of the
+program; NUM_THREADS and printout. By default, the number of threads is 8 and 
+printout is set to false.
+X
++------------------------+
+| Experiments & Analysis |
++------------------------+
+To test these functions, I tested each one on various sizes of data (from 100 to
+1000000) and various numbers of threads (from 1 to 64) on a 64 thread SMP 
+machine called Atlas. The results of these expirements are included in 
+results.ods. For each data size, I've highlighted in yellow the number of 
+threads which achieved the best results for each function.
+X
+These highlighted best results show that increasing the number of threads does
+increase performance, but only up to a certain point. That point is largely 
+determined by the time complexity of the underlying problem. For example,
+the optimal number of threads increases very slowly for the linear search
+function, but increases quicker for bubble sort and the fastest for matrix
+multiplication. For arrays of size 10000 and the matrix of size 100x100 (10,000
+flattened), the optimal number of threads for linear search, bubble sort, and 
+matrix multiplication was 1,8, and 16, respectively. 
+X
+Clealy the return first function does not follow this trend since it has
+constant time complexity and always finishes instantly (depending on the 
+overhead of setting up unnecessary threads).
+X
+In conclusion, these results follow the patterns discovered in Project 1 with 
+Java, except there is much less noise since I am using OpenMP instead of Java
+sockets. With Java sockets, there is a lot of overhead associated with setting
+up connections and transmitting data to each processor. 
+X
+X
+X				   +---------+
+X				   | The End |
+X				   +---------+
+X
+X
+X
+SHAR_EOF
+  (set 20 20 03 05 23 44 14 'doc.txt'; eval "$shar_touch") &&
+  chmod 0644 'doc.txt'
+if test $? -ne 0
+then ${echo} 'restore of doc.txt failed'
+fi
+  if ${md5check}
+  then (
+       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'doc.txt: MD5 check failed'
+       ) << \SHAR_EOF
+c4708e8e981775abf30215ba121a35e7  doc.txt
+SHAR_EOF
+  else
+test `LC_ALL=C wc -c < 'doc.txt'` -ne 3124 && \
+  ${echo} 'restoration warning:  size of doc.txt is not 3124'
+  fi
+fi
+# ============= makefile ==============
+if test -f 'makefile' && test "$first_param" != -c; then
+  ${echo} 'x -SKIPPING makefile (file already exists)'
+else
+${echo} 'x - extracting makefile (binary)'
+  sed 's/^X//' << 'SHAR_EOF' | uudecode &&
+begin 600 makefile
+M<&%R86QL96PZ('!A<F%L;&5L+F\*"6=C8R`M<W1D/6,Y.2`M;R!P87)A;&QE
+M;"!P87)A;&QE;"YO("UL9V]M<`H*<&%R86QL96PN;SH@<&%R86QL96PN8PH)
+C9V-C("US=&0]8SDY("UC('!A<F%L;&5L+F,@+69O<&5N;7!R
+`
+end
+SHAR_EOF
+  (set 20 20 03 05 23 44 17 'makefile'; eval "$shar_touch") &&
+  chmod 0644 'makefile'
+if test $? -ne 0
+then ${echo} 'restore of makefile failed'
+fi
+  if ${md5check}
+  then (
+       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'makefile: MD5 check failed'
+       ) << \SHAR_EOF
+cd2b4b3b5fa4ffaa7cbc7c86c509bd30  makefile
+SHAR_EOF
+  else
+test `LC_ALL=C wc -c < 'makefile'` -ne 125 && \
+  ${echo} 'restoration warning:  size of makefile is not 125'
+  fi
+fi
+# ============= parallel ==============
+if test -f 'parallel' && test "$first_param" != -c; then
+  ${echo} 'x -SKIPPING parallel (file already exists)'
+else
+${echo} 'x - extracting parallel (binary)'
+  sed 's/^X//' << 'SHAR_EOF' | uudecode &&
+begin 600 parallel
+M?T5,1@(!`0````````````,`/@`!````\`H```````!``````````.@^````
+M`````````$``.``)`$``'0`<``8````$````0`````````!``````````$``
+M````````^`$```````#X`0````````@``````````P````0````X`@``````
+M`#@"````````.`(````````<`````````!P``````````0`````````!````
+M!0```````````````````````````````````+`@````````L"``````````
+M`"````````$````&````("T````````@+2```````"`M(```````]`(`````
+M``#X`@``````````(````````@````8````P+0```````#`M(```````,"T@
+M`````````@`````````"````````"``````````$````!````%0"````````
+M5`(```````!4`@```````$0`````````1``````````$`````````%#E=&0$
+M````^!P```````#X'````````/@<````````M`````````"T``````````0`
+M````````4>5T9`8`````````````````````````````````````````````
+M````````````$`````````!2Y71D!````"`M````````("T@```````@+2``
+M`````.`"````````X`(````````!`````````"]L:6(V-"]L9"UL:6YU>"UX
+M.#8M-C0N<V\N,@`$````$`````$```!'3E4```````,````"``````````0`
+M```4`````P```$=.50`TG7X1^+AV5,98'1*DUA9FTP%F@P$````!`````0``
+M````````````````````````````````````````````````````````````
+M9P```!(`````````````````````````!`$``!(`````````````````````
+M````#@```"``````````````````````````[@```!(`````````````````
+M````````#`$``!(`````````````````````````@````!(`````````````
+M````````````Q@```!(`````````````````````````\P```!(`````````
+M````````````````$@$``!(`````````````````````````I0```!(`````
+M````````````````````-`$``!(`````````````````````````Z````!(`
+M````````````````````````4P```!(`````````````````````````*@``
+M`"``````````````````````````B0```!(`````````````````````````
+MC@```!(`````````````````````````&0$``!(`````````````````````
+M````(`$``!(`````````````````````````XP```!(`````````````````
+M````````.0```"``````````````````````````N````!(`````````````
+M````````````)0$``"(`````````````````````````Z0```!(`````````
+M`````````````````&QI8F=O;7`N<V\N,0!?251-7V1E<F5G:7-T97)434-L
+M;VYE5&%B;&4`7U]G;6]N7W-T87)T7U\`7TE435]R96=I<W1E<E1-0VQO;F54
+M86)L90!O;7!?9V5T7VYU;5]T:')E861S`$=/35!?<V5C=&EO;G-?96YD7VYO
+M=V%I=`!O;7!?9V5T7W=T:6UE`$=/35!?<&%R86QL96Q?<V5C=&EO;G,`1T]-
+M4%]S96-T:6]N<U]N97AT`$=/35!?<&%R86QL96P`;VUP7V=E=%]T:')E861?
+M;G5M`&QI8F,N<V\N-@!E>&ET`'-R86YD`'!U=',`7U]S=&%C:U]C:&M?9F%I
+M;`!P=71C:&%R`&-L;V-K`'!R:6YT9@!M86QL;V,`871O:0!?7V-X85]F:6YA
+M;&EZ90!?7VQI8F-?<W1A<G1?;6%I;@!'3$E"0U\R+C0`1TQ)0D-?,BXR+C4`
+M1T]-4%\T+C``3TU07S(N,`!'3TU07S$N,`````(``P````,``P`$``4`!@`#
+M``(``P`#``4````#``<``P`#``,````'``,``P````$``@#9````$````#``
+M```4:6D-```&`$8!```0````=1II"0```P!0`0````````$`!``!````$```
+M``````#0(R8$```'`%P!```0````0"0F!```!0!N`0``$````$`E)@0```0`
+M90$``!````#0*"8$```"`&T!````````("T@```````(`````````/`+````
+M````*"T@```````(`````````+`+````````"#`@```````(``````````@P
+M(```````V"\@```````&`````P``````````````X"\@```````&````"P``
+M````````````Z"\@```````&````#@``````````````\"\@```````&````
+M%```````````````^"\@```````&````%@``````````````2"\@```````'
+M`````0``````````````4"\@```````'`````@``````````````6"\@````
+M```'````!```````````````8"\@```````'````!0``````````````:"\@
+M```````'````!@``````````````<"\@```````'````!P``````````````
+M>"\@```````'````"```````````````@"\@```````'````"0``````````
+M````B"\@```````'````"@``````````````D"\@```````'````#```````
+M````````F"\@```````'````#0``````````````H"\@```````'````#P``
+M````````````J"\@```````'````$```````````````L"\@```````'````
+M$0``````````````N"\@```````'````$@``````````````P"\@```````'
+M````$P``````````````R"\@```````'````%0``````````````T"\@````
+M```'````%P``````````````2(/L"$B+!4TF(`!(A<!T`O_02(/$",,`````
+M``````#_-8(E(`#_)80E(``/'T``_R6")2``:`````#IX/____\E>B4@`&@!
+M````Z=#_____)7(E(`!H`@```.G`_____R5J)2``:`,```#IL/____\E8B4@
+M`&@$````Z:#_____)5HE(`!H!0```.F0_____R52)2``:`8```#I@/____\E
+M2B4@`&@'````Z7#_____)4(E(`!H"````.E@_____R4Z)2``:`D```#I4/__
+M__\E,B4@`&@*````Z4#_____)2HE(`!H"P```.DP_____R4B)2``:`P```#I
+M(/____\E&B4@`&@-````Z1#_____)1(E(`!H#@```.D`_____R4*)2``:`\`
+M``#I\/[___\E`B4@`&@0````Z>#^____)?HD(`!H$0```.G0_O___R42)2``
+M9I```````````#'M28G17DB)XDB#Y/!05$R-!:H/``!(C0TS#P``2(T]Y@``
+M`/\5QB0@`/0/'T0``$B-/?$D(`!52(T%Z20@`$@Y^$B)Y7092(L%FB0@`$B%
+MP'0-7?_@9BX/'X0``````%W##Q]``&8N#Q^$``````!(C3VQ)"``2(TUJB0@
+M`%5(*?Y(B>5(P?X#2(GP2,'H/T@!QDC1_G082(L%820@`$B%P'0,7?_@9@\?
+MA```````7<,/'T``9BX/'X0``````(`]720@``!U+TB#/3<D(```54B)Y70,
+M2(L].B0@`.@-____Z$C____&!34D(``!7<,/'X``````\\-F#Q]$``!52(GE
+M7>EF____54B)Y4B#[$")?<Q(B77`@WW,`W0;2(T]L@X``+@`````Z!#^__^_
+M`````.B&_O__2(M%P$B#P`A(BP!(B<?H8_[__XE%U$B+1<!(@\`02(L`2(G'
+MZ$W^__^)1=B#?=@`=`R#?=0#?P:#?=0`>2=(C3V!#@``N`````#HM_W__TB-
+M/9`.``#H6_W__[\`````Z"'^__^+1=2#^`$/A)P```"#^`%_"87`=!SIE`(`
+M`(/X`@^$*@$``(/X`P^$T0$``.E]`@``2(T]G`X``+@`````Z%_]__^+1=B)
+MQ^AS`@``2(E%^`^V!2\C(`"$P'0,2(T]APX``.CJ_/__#[8%&",@`(3`=!&+
+M5=A(BT7XB=9(B<?H9P@``$B-/7`.``"X`````.@-_?__2(M%^$B)Q^B;`P``
+MB47DZ08"``!(C3TE#@``N`````#HZ/S__XM%V(G'Z/P!``!(B47X#[8%N"(@
+M`(3`=`Q(C3T0#@``Z'/\__\/M@6A(B``A,!T$8M5V$B+1?B)UDB)Q^CP!P``
+MZ$+]__^9]WW8B=!(F$B-%(4`````2(M%^$@!T(L`B47<BT7<B<9(C3WJ#0``
+MN`````#H</S__XM5W(M-V$B+1?B)SDB)Q^AI`P``B47@Z6$!``!(C3V`#0``
+MN`````#H0_S__XM%V(G'Z%<!``!(B47X#[8%$R(@`(3`=`Q(C3UK#0``Z,[[
+M__\/M@7\(2``A,!T$8M5V$B+1?B)UDB)Q^A+!P``2(T]EPT``+@`````Z/'[
+M__^+5=A(BT7XB=9(B<?HE@,```^V!;XA(`"$P'0,2(T]APT``.AY^___#[8%
+MIR$@`(3`#X3#````BU782(M%^(G62(G'Z/(&``#IK0```$B-/64-``"X````
+M`.B3^___BT78B<?H,`$``$B)1>@/M@5C(2``A,!T#$B-/5$-``#H'OO__P^V
+M!4PA(`"$P'01BU782(M%Z(G62(G'Z.L&``!(C3T[#0``N`````#H0?O__XM5
+MV$B+1>B)UDB)Q^AX!0``2(E%\`^V!0HA(`"$P'0,2(T](0T``.C%^O__#[8%
+M\R`@`(3`=!:+5=A(BT7HB=9(B<?HD@8``.L#D.L!D+\*````Z(GZ__^X````
+M`,G#54B)Y4B#["")?>R_`````.@-^___B<?HYOK__XM%[$B82,'@`DB)Q^@5
+M^___2(E%^,=%]`````#K0>A#^___B<&+1?1(F$B-%(4`````2(M%^$B--`*Z
+MB;7X%(G(]^K!^@V)R,'X'RG"B=!IP*"&`0`IP8G(B0:#1?0!BT7T.T7L?+=(
+MBT7XR<-52(GE4TB#[#B)?<R_`````.B#^O__B<?H7/K__XM%S$B82,'@`TB)
+MQ^B+^O__2(E%Z,=%W`````#K+HM%S$B82,'@`XM5W$ACTDB-#-4`````2(M5
+MZ$B-'!%(B<?H5_K__TB)`X-%W`&+1=P[1<Q\RL=%X`````#K9L=%Y`````#K
+M4>AQ^O__B<&+1>!(F$B-%,4`````2(M%Z$@!T$B+`(M5Y$ACTDC!X@)(C300
+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
+M`=B)1<R-!!(!PXM%S$B82(T4A0````!(BT782`'0BQ"+1<Q(F$B#P`%(C0R%
+M`````$B+1=A(`<B+`#G"?PN#1<P".5W,?,/K1HM%S$B82(/``4B-%(4`````
+M2(M%V$@!PHM%S$B82(T,A0````!(BT782`'(2(G62(G'Z#W\___KO+@`````
+M@\$!Z5W___](@\0X6T%<05U=PU5(B>5(@^PP2(E]V$B+1=B+0!")1>Q(BT78
+MBT`,B47P2(M%V(M`"(E%]$B+1=A(BP!(B47XZ-[Q__^#^`%T,X/X`7('@_@"
+M=!`/"^A(\?__ZSGHP?'__^OABT7LC4@!BU7P2(M%^(G.2(G'Z'KZ___KX(M%
+M[(U0_XM-]$B+1?B)SDB)Q^AA^O__Z\?)PU5(B>5!5%-(@^PP2(E]R$B+1<A(
+MBT`(2(E%X$B+1<A(BP!(B47H2(M%R(M`$(E%W(M=W.AS\?__08G$Z!OQ__^)
+MQHG8F4'W_(G!B=B90??\B=`YQ@^,%P$```^O\8GR`="-%`@YT`^-$@$``(E%
+MT,=%U`````"+1=0[1=Q\#H-%T`$Y5=!\Z.GR````BT702)A(C0S%`````$B+
+M1>A(`<A(BP"+3=1(8\E(P>$"2`'(QP``````QT78`````(M%V#M%W'P&@T74
+M`>NKBT702)A(C0S%`````$B+1>A(`<A(BP"+3=1(8\E(P>$"2`'(BS"+1=!(
+MF$B-#,4`````2(M%X$@!R$B+`(M-V$ACR4C!X0)(`<B+"(M%V$B82(T\Q0``
+M``!(BT7@2`'X2(L`BWW42&/_2,'G`D@!^(L`#Z_(BT702)A(C3S%`````$B+
+M1>A(`?A(BP"+?=1(8_](P><"2`'X`?&)"(-%V`'I3/___[@`````@\$!Z=S^
+M__](@\0P6T%<7<,/'T``05=!5DF)UT%5051,C27.$B``54B-+<X2(`!308G]
+M28GV3"GE2(/L"$C!_0/H'^___TB%[70@,=L/'X0``````$R)^DR)]D2)[T'_
+M%-Q(@\,!2#G==>I(@\0(6UU!7$%=05Y!7\.09BX/'X0``````//#``!(@^P(
+M2(/$",,````!``(``````%5S86=E.B`\;W!T:6]N/B`\87)R87DO;6%T<FEX
+M('-I>F4^```````*4&QE87-E(&5N=&5R(&)E='1E<B!A<F=U;65N=',N``I/
+M<'1I;VYS.B`P*5)E='5R;B!&:7)S="P@,2E,:6YE87(@4V5A<F-H+"`R*4)U
+M8F)L92!3;W)T+"`S*2!-871R:7@@375L=&EP;&EC871I;VX`"D=E;F5R871I
+M;F<@07)R87DN+BX`"D]R:6=I;F%L($%R<F%Y.@!2971U<FYI;F<@9FER<W0N
+M+BX```````I396%R8VAI;F<@9F]R(')A;F1O;6QY+7-E;&5C=&5D(&ME>3H@
+M)60N+BX`"D)U8F)L92!S;W)T:6YG('1H92!A<G)A>2XN+@`*4V]R=&5D($%R
+M<F%Y.@`*1V5N97)A=&EN9R!-871R:7@N+BX`"D]R:6=I;F%L($UA=')I>#H`
+M"DUU;'1I<&QY:6YG($UA=')I>"XN+@`*375L=&EP;&EE9"!-871R:7@Z``I&
+M:7)S=#H@)60`"D5X96-U=&EO;B!T;V]K("5F('-E8V]N9',*``````````I%
+M>&5C=71I;VX@8V]M<&QE=&5D(&EN("5F('-E8V]N9',`"E=O<FL@8V]M<&QE
+M=&5D(&EN("5F('-E8V]N9',`)60@``````I+97D@9F]U;F0N(%!O<VET:6]N
+M(#T@)60@8GD@=&AR96%D("5D(`H```````````````"`A"Y!`1L#.[0````5
+M````N.S__P`!``#H[?__*`$``/CM___0`````N___T`!``!6\O__8`$``-_R
+M__^``0``TO/__Z0!``!%]/__Q`$``.[T___D`0``MO7__P0"```:]O__)`(`
+M`%/W__]$`@``@/?__V0"``"!^/__B`(``-'X__^H`@``4/G__\@"```0^O__
+M[`(``##[__\4`P``O?O__S0#``!(_?__6`,``+C]__^@`P```````!0`````
+M`````7I2``%X$`$;#`<(D`$'$!0````<````(.W__RL``````````````!0`
+M`````````7I2``%X$`$;#`<(D`$``"0````<````L.O__S`!````#A!&#AA*
+M#PMW"(``/QH[*C,D(@`````4````1````+CL__\(```````````````<````
+M7````+KM__]4`P```$$.$(8"0PT&`T\##`<(`!P```!\````[O#__XD`````
+M00X0A@)##08"A`P'"```(````)P```!7\?__\P````!!#A"&`D,-!D6#`P+I
+M#`<(````'````,`````F\O__<P````!!#A"&`D,-!@)N#`<(```<````X```
+M`'GR__^I`````$$.$(8"0PT&`J0,!P@``!P``````0```O/__\@`````00X0
+MA@)##08"PPP'"```'````"`!``"J\___9`````!!#A"&`D,-!@)?#`<(```<
+M````0`$``.[S__\Y`0```$$.$(8"0PT&`S0!#`<(`!P```!@`0``!_7__RT`
+M````00X0A@)##09H#`<(````(````(`!```4]?__`0$```!!#A"&`D,-!D6#
+M`P+W#`<(````'````*0!``#Q]?__4`````!!#A"&`D,-!@)+#`<(```<````
+MQ`$``"'V__]_`````$$.$(8"0PT&`GH,!P@``"````#D`0``@/;__\``````
+M00X0A@)##09'C`.#!`*T#`<(`"0````(`@``'/?__R`!````00X0A@)##09)
+MC0.,!(,%`Q(!#`<(```<````,`(``!3X__^-`````$$.$(8"0PT&`H@,!P@`
+M`"````!0`@``@?C__X<!````00X0A@)##09'C`.#!`-[`0P'"$0```!T`@``
+MZ/G__V4`````0@X0CP)"#AB.`T4.((T$0@XHC`5(#C"&!D@..(,'30Y`<@XX
+M00XP00XH0@X@0@X80@X00@X(`!````"\`@``$/K__P(`````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M````````````````````````````````````````````````````````````
+M``````````````````````````````````````````#P"P```````+`+````
+M`````0`````````!``````````$`````````V0`````````,`````````)`)
+M````````#0````````"T&@```````!D`````````("T@```````;````````
+M``@`````````&@`````````H+2```````!P`````````"`````````#U_O]O
+M`````)@"````````!0````````#X!`````````8`````````N`(````````*
+M`````````'8!````````"P`````````8`````````!4`````````````````
+M```#`````````#`O(````````@````````"P`0```````!0`````````!P``
+M```````7`````````.`'````````!P`````````@!P````````@`````````
+MP``````````)`````````!@`````````'@`````````(`````````/O__V\`
+M`````0``"`````#^__]O`````*`&````````____;P`````"`````````/#_
+M_V\`````;@8```````#Y__]O``````,`````````````````````````````
+M````````````````````````````````````````````````````````````
+M```````````````````````````P+2````````````````````````````#&
+M"0```````-8)````````Y@D```````#V"0````````8*````````%@H`````
+M```F"@```````#8*````````1@H```````!6"@```````&8*````````=@H`
+M``````"&"@```````)8*````````I@H```````"V"@```````,8*````````
+MU@H`````````````````````````````````````````````````````````
+M```````````````(,"````````@```!'0T,Z("A58G5N='4@-RXT+C`M,75B
+M=6YT=3%^,3@N,#0N,2D@-RXT+C``````````````````````````````````
+M```````#``$`.`(````````````````````````#``(`5`(`````````````
+M```````````#``,`=`(````````````````````````#``0`F`(`````````
+M```````````````#``4`N`(````````````````````````#``8`^`0`````
+M```````````````````#``<`;@8````````````````````````#``@`H`8`
+M```````````````````````#``D`(`<````````````````````````#``H`
+MX`<````````````````````````#``L`D`D````````````````````````#
+M``P`L`D````````````````````````#``T`X`H`````````````````````
+M```#``X`\`H````````````````````````#``\`M!H`````````````````
+M```````#`!``P!H````````````````````````#`!$`^!P`````````````
+M```````````#`!(`L!T````````````````````````#`!,`("T@````````
+M```````````````#`!0`*"T@```````````````````````#`!4`,"T@````
+M```````````````````#`!8`,"\@```````````````````````#`!<``#`@
+M```````````````````````#`!@`%#`@```````````````````````#`!D`
+M``````````````````````$````$`/'_``````````````````````P````"
+M``X`(`L```````````````````X````"``X`8`L``````````````````"$`
+M```"``X`L`L``````````````````#<````!`!@`%#`@```````!````````
+M`$8````!`!0`*"T@`````````````````&T````"``X`\`L`````````````
+M`````'D````!`!,`("T@`````````````````)@````$`/'_````````````
+M`````````*,````"``X`2!8```````#``````````+L````"``X`"!<`````
+M```@`0```````-$````"``X`*!@```````"-`````````.4````"``X`M1@`
+M``````"'`0````````$````$`/'_`````````````````````/\````!`!(`
+MK"`````````````````````````$`/'_``````````````````````T!````
+M`!,`*"T@`````````````````!X!```!`!4`,"T@`````````````````"<!
+M`````!,`("T@`````````````````#H!`````!$`^!P`````````````````
+M`$T!```!`!8`,"\@`````````````````&,!```2````````````````````
+M`````(8!```2``X`L!H````````"`````````)8!```2````````````````
+M`````````*L!```2``X`UP\```````#S`````````,(!```@````````````
+M``````````````<#```@`!<``#`@`````````````````-X!```2````````
+M`````````````````/`!```0`!<`%#`@`````````````````/<!```1`!@`
+M%3`@```````!```````````"```2`````````````````````````!,"```2
+M`````````````````````````"H"```2``X`>14```````!0`````````#8"
+M```2`````````````````````````)`!```2``\`M!H`````````````````
+M`%("```2`````````````````````````&X"```2``X`>!0````````!`0``
+M`````'X"```2``X`/1$```````"I`````````(P"```2``X`$A,````````Y
+M`0```````)8"```2`````````````````````````*H"```1`!<`$#`@````
+M```$`````````+8"```2`````````````````````````-,"```2````````
+M`````````````````/("```2``````````````````````````4#```0`!<`
+M`#`@`````````````````!(#```2`````````````````````````"\#```@
+M`````````````````````````#X#```1`A<`"#`@`````````````````$L#
+M```1`!``P!H````````$`````````%H#```2````````````````````````
+M`&P#```2`````````````````````````(T#```2``X`0!H```````!E````
+M`````)T#```2`````````````````````````!D!```0`!@`&#`@````````
+M``````````L#```2``X`\`H````````K`````````+$#```0`!@`%#`@````
+M`````````````+T#```2``X`^@L```````!4`P```````,(#```2``X`R14`
+M``````!_`````````,\#```2``X`3@\```````")`````````-X#```2````
+M`````````````````````/`#```2``X`RA````````!S`````````/T#```2
+M``````````````````````````\$```1`A<`&#`@`````````````````!L$
+M```@`````````````````````````#4$```2``X`2Q0````````M````````
+M`#H$```2`````````````````````````%($```2``X`KA(```````!D````
+M`````&0$```B`````````````````````````)<#```2``L`D`D`````````
+M`````````/,"```2`````````````````````````(`$```2``X`YA$`````
+M``#(``````````!C<G1S='5F9BYC`&1E<F5G:7-T97)?=&U?8VQO;F5S`%]?
+M9&]?9VQO8F%L7V1T;W)S7V%U>`!C;VUP;&5T960N-S8Y-P!?7V1O7V=L;V)A
+M;%]D=&]R<U]A=7A?9FEN:5]A<G)A>5]E;G1R>0!F<F%M95]D=6UM>0!?7V9R
+M86UE7V1U;6UY7VEN:71?87)R87E?96YT<GD`<&%R86QL96PN8P!L:6YE87)?
+M<V5A<F-H+E]O;7!?9FXN,`!B=6)B;&5?<V]R="Y?;VUP7V9N+C$`<75I8VMS
+M;W)T+E]O;7!?9FXN,@!M871R:7A?;75L=&EP;'DN7V]M<%]F;BXS`%]?1E)!
+M345?14Y$7U\`7U]I;FET7V%R<F%Y7V5N9`!?1%E.04U)0P!?7VEN:71?87)R
+M87E?<W1A<G0`7U]'3E5?14A?1E)!345?2$12`%]'3$]"04Q?3T9&4T547U1!
+M0DQ%7P!'3TU07W-E8W1I;VYS7V5N9%]N;W=A:71`0$=/35!?,2XP`%]?;&EB
+M8U]C<W5?9FEN:0!P=71C:&%R0$!'3$E"0U\R+C(N-0!G971?<F%N9%]S<75A
+M<F5?;6%T<FEX`%])5$U?9&5R96=I<W1E<E1-0VQO;F5486)L90!P=71S0$!'
+M3$E"0U\R+C(N-0!?961A=&$`<')I;G1O=70`8VQO8VM`0$=,24)#7S(N,BXU
+M`&]M<%]G971?=W1I;65`0$]-4%\R+C``<')I;G1?87)R87D`;VUP7V=E=%]T
+M:')E861?;G5M0$!/35!?,2XP`%]?<W1A8VM?8VAK7V9A:6Q`0$=,24)#7S(N
+M-`!M871R:7A?;75L=&EP;'D`;&EN96%R7W-E87)C:`!Q=6EC:W-O<G0`<')I
+M;G1F0$!'3$E"0U\R+C(N-0!.54U?5$A214%$4P!'3TU07W-E8W1I;VYS7VYE
+M>'1`0$=/35!?,2XP`%]?;&EB8U]S=&%R=%]M86EN0$!'3$E"0U\R+C(N-0!S
+M<F%N9$!`1TQ)0D-?,BXR+C4`7U]D871A7W-T87)T`&]M<%]G971?;G5M7W1H
+M<F5A9'-`0$]-4%\Q+C``7U]G;6]N7W-T87)T7U\`7U]D<V]?:&%N9&QE`%])
+M3U]S=&1I;E]U<V5D`'1I;65`0$=,24)#7S(N,BXU`$=/35!?<&%R86QL96Q?
+M<V5C=&EO;G-`0$=/35!?-"XP`%]?;&EB8U]C<W5?:6YI=`!M86QL;V-`0$=,
+M24)#7S(N,BXU`%]?8G-S7W-T87)T`&UA:6X`<')I;G1?;6%T<FEX`&=E=%]R
+M86YD7V%R<F%Y`&%T;VE`0$=,24)#7S(N,BXU`')E='5R;E]F:7)S=`!E>&ET
+M0$!'3$E"0U\R+C(N-0!?7U1-0U]%3D1?7P!?251-7W)E9VES=&5R5$U#;&]N
+M951A8FQE`'-W87``1T]-4%]P87)A;&QE;$!`1T]-4%\T+C``<75I8VMS;W)T
+M7W=R87!P97(`7U]C>&%?9FEN86QI>F5`0$=,24)#7S(N,BXU`&)U8F)L95]S
+M;W)T```N<WEM=&%B`"YS=')T86(`+G-H<W1R=&%B`"YI;G1E<G``+FYO=&4N
+M04))+71A9P`N;F]T92YG;G4N8G5I;&0M:60`+F=N=2YH87-H`"YD>6YS>6T`
+M+F1Y;G-T<@`N9VYU+G9E<G-I;VX`+F=N=2YV97)S:6]N7W(`+G)E;&$N9'EN
+M`"YR96QA+G!L=``N:6YI=``N<&QT+F=O=``N=&5X=``N9FEN:0`N<F]D871A
+M`"YE:%]F<F%M95]H9'(`+F5H7V9R86UE`"YI;FET7V%R<F%Y`"YF:6YI7V%R
+M<F%Y`"YD>6YA;6EC`"YD871A`"YB<W,`+F-O;6UE;G0`````````````````
+M````````````````````````````````````````````````````````````
+M`````````````````!L````!`````@`````````X`@```````#@"````````
+M'`````````````````````$````````````````````C````!P````(`````
+M````5`(```````!4`@```````"`````````````````````$````````````
+M````````,0````<````"`````````'0"````````=`(````````D````````
+M````````````!````````````````````$0```#V__]O`@````````"8`@``
+M`````)@"````````'``````````%``````````@```````````````````!.
+M````"P````(`````````N`(```````"X`@```````$`"````````!@````$`
+M```(`````````!@`````````5@````,````"`````````/@$````````^`0`
+M``````!V`0```````````````````0```````````````````%X```#___]O
+M`@````````!N!@```````&X&````````,``````````%``````````(`````
+M`````@````````!K````_O__;P(`````````H`8```````"@!@```````(``
+M````````!@````(````(````````````````````>@````0````"````````
+M`"`'````````(`<```````#```````````4`````````"``````````8````
+M`````(0````$````0@````````#@!P```````.`'````````L`$````````%
+M````%@````@`````````&`````````".`````0````8`````````D`D`````
+M``"0"0```````!<````````````````````$````````````````````B0``
+M``$````&`````````+`)````````L`D````````P`0``````````````````
+M$``````````0`````````)0````!````!@````````#@"@```````.`*````
+M````"`````````````````````@`````````"`````````"=`````0````8`
+M````````\`H```````#P"@```````,(/```````````````````0````````
+M````````````HP````$````&`````````+0:````````M!H````````)````
+M````````````````!````````````````````*D````!`````@````````#`
+M&@```````,`:````````.`(```````````````````@`````````````````
+M``"Q`````0````(`````````^!P```````#X'````````+0`````````````
+M```````$````````````````````OP````$````"`````````+`=````````
+ML!T``````````P``````````````````"````````````````````,D````.
+M`````P`````````@+2```````"`M````````"`````````````````````@`
+M````````"`````````#5````#P````,`````````*"T@```````H+0``````
+M``@````````````````````(``````````@`````````X0````8````#````
+M`````#`M(```````,"T``````````@````````8`````````"``````````0
+M`````````)@````!`````P`````````P+R```````#`O````````T```````
+M``````````````@`````````"`````````#J`````0````,``````````#`@
+M````````,````````!0````````````````````(````````````````````
+M\`````@````#`````````!0P(```````%#`````````$````````````````
+M`````0```````````````````/4````!````,````````````````````!0P
+M````````*P````````````````````$``````````0`````````!`````@``
+M``````````````````````!`,````````!@)````````&P```"\````(````
+M`````!@`````````"0````,`````````````````````````6#D```````",
+M!````````````````````0```````````````````!$````#````````````
+M`````````````.0]````````_@````````````````````$`````````````
+%````````
+`
+end
+SHAR_EOF
+  (set 20 20 03 05 23 44 18 'parallel'; eval "$shar_touch") &&
+  chmod 0755 'parallel'
+if test $? -ne 0
+then ${echo} 'restore of parallel failed'
+fi
+  if ${md5check}
+  then (
+       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'parallel: MD5 check failed'
+       ) << \SHAR_EOF
+698f00cfe9aff959ebb38b213d9b7f05  parallel
+SHAR_EOF
+  else
+test `LC_ALL=C wc -c < 'parallel'` -ne 17960 && \
+  ${echo} 'restoration warning:  size of parallel is not 17960'
+  fi
+fi
+# ============= parallel.c ==============
+if test -f 'parallel.c' && test "$first_param" != -c; then
+  ${echo} 'x -SKIPPING parallel.c (file already exists)'
+else
+${echo} 'x - extracting parallel.c (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'parallel.c' &&
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <omp.h>
+#include <stdbool.h>
+X
+int NUM_THREADS = 8;
+bool printout = false;
+X
+// Utilities
+int* get_rand_array(int size);
+int **get_rand_square_matrix(int size);
+void print_array(int* array, int size);
+void print_matrix(int **matrix, int size);
+//void del_array(int* array,int size);
+//void del_matrix(int **matrix, int size);
+X
+// Parallel Algorithms
+int return_first(int* array);
+int linear_search(int* array, int size, int key);
+void bubble_sort(int* array, int size);
+void quicksort_wrapper(int* array, int size);
+void quicksort(int* array, int low, int high);
+int partition(int* array, int low, int high);
+int **matrix_multiply(int **matrix, int size);
+X
+void swap(int* a, int* b);
+X
+int main(int argc, char *argv[]){
+X
+X    // verify program input
+X    if (argc != 3){
+X        printf("Usage: <option> <array/matrix size>");
+X        exit(0);
+X    }
+X    int option = atoi(argv[1]);
+X    int N = atoi(argv[2]);
+X    if (N == 0 || option > 3 || option < 0){
+X        printf("\nPlease enter better arguments.");
+X        printf("\nOptions: 0)Return First, 1)Linear Search, 2)Bubble Sort, 3) Matrix Multiplication\n");
+X        exit(0);
+X    }
+X
+X    // Switch to execute the right code
+X    int* array;
+X    switch(option){
+X
+X        case 0: // Return First
+X            
+X            printf("\nGenerating Array...");
+X            //int *array = get_rand_array(N);
+X            array = get_rand_array(N);
+X            if (printout) printf("\nOriginal Array:\n");
+X            if (printout) print_array(array,N);
+X
+X            printf("Returning first...");
+X            int first = return_first(array);
+X            break;
+X
+X        case 1: // Linear Search
+X
+X            printf("\nGenerating Array...");
+X            array = get_rand_array(N);
+X            if (printout) printf("\nOriginal Array:\n");
+X            if (printout) print_array(array,N);
+X
+X            int rand_key = array[rand() % N];
+X            printf("\nSearching for randomly-selected key: %d...",rand_key);
+X            int result = linear_search(array, N, rand_key);
+X            break;
+X
+X        case 2:  // Bubble Sort
+X
+X            printf("\nGenerating Array...");
+X            array = get_rand_array(N);
+X            if (printout) printf("\nOriginal Array:\n");
+X            if (printout) print_array(array,N);
+X
+X            printf("\nBubble sorting the array...");
+X            bubble_sort(array,N);
+X            if (printout) printf("\nSorted Array:\n");
+X            if (printout) print_array(array,N);
+X            break;
+X
+X        case 3: // Matrix Multiplication
+X            printf("\nGenerating Matrix...");
+X            int **matrix = get_rand_square_matrix(N);
+X            if (printout) printf("\nOriginal Matrix:\n");
+X            if (printout) print_matrix(matrix,N); 
+X
+X            printf("\nMultiplying Matrix...");
+X            int **mmatrix = matrix_multiply(matrix, N);
+X            if (printout) printf("\nMultiplied Matrix:\n");
+X            if (printout) print_matrix(matrix,N);
+X            break;
+X
+X        default:
+X            //quicksort_wrapper(array, N);
+X            break;
+X    }
+X
+X    printf("\n");
+X    return 0;
+X
+}
+X
+/*=============================================================================
+A function to generate a random array of certain size.
+=============================================================================*/
+int* get_rand_array(int size){
+X    srand((unsigned)time(NULL));    
+X    int* array = (int*) malloc(size * sizeof(int));
+X    for (int i = 0; i < size; i++){
+X        array[i] = rand() % 100000;
+X    }
+X    return array;
+}
+X
+/*=============================================================================
+A function to generate a square matrix of random numbers.
+=============================================================================*/
+int **get_rand_square_matrix(int size){
+X    srand((unsigned)time(NULL));
+X    int **matrix = malloc(sizeof(int*) * size);
+X    for(int i = 0; i < size; i++){
+X        matrix[i] = malloc(sizeof(int*) * size);
+X    }
+X    for (int i = 0; i < size; i++){
+X        for (int j = 0; j < size; j++){
+X            matrix[i][j] = rand() % 10000;
+X        }
+X    }
+X    return matrix;
+}
+X
+/*=============================================================================
+A "parallel" algorithm to return the first item in an array. 
+=============================================================================*/
+int return_first(int* array){
+X    clock_t begin = clock();
+X    printf("\nFirst: %d",array[0]);
+X    double elapsed = ((double)(clock() - begin)) / CLOCKS_PER_SEC;
+X    printf("\nExecution took %f seconds\n",elapsed);
+X    return array[0];
+}
+X
+/*=============================================================================
+A parallel implementation of linear search using openmp.
+=============================================================================*/
+int linear_search(int* array, int size, int key){
+X    double start_time, elapsed_time;
+X    int i;
+X    start_time = omp_get_wtime();
+X    #pragma omp parallel num_threads(NUM_THREADS) private(i)
+X    {
+X        #pragma omp for
+X        for(i = 0; i < size; i++){
+X            if(array[i] == key){
+X                printf("\nKey found. Position = %d by thread %d \n",     i+1, omp_get_thread_num());
+X            }
+X        }
+X    }
+X    elapsed_time = omp_get_wtime() - start_time;
+X    printf("\nExecution completed in %f seconds",elapsed_time);
+X    return 0;
+}
+/*=============================================================================
+A bubble sort implemented using even-odd sorting methods.
+=============================================================================*/
+void bubble_sort(int* array, int size){
+X    double start_time, elapsed_time;
+X    int tid;
+X    start_time = omp_get_wtime();
+X    for (int i = 0; i < size; i++){
+X        int first = i % 2;
+X        #pragma omp parallel for default(none), shared(array,first,size) num_threads(NUM_THREADS)
+X        for (int j = first; j < size - 1; j+=2){
+X            if (array[j] > array[j + 1]){
+X                swap(&array[j],&array[j + 1]);
+X            }
+X        }
+X    }
+X    elapsed_time = omp_get_wtime() - start_time;
+X    printf("\nExecution completed in %f seconds",elapsed_time);
+}
+X
+/*=============================================================================
+A parallel implementation of quicksort using openmp.
+=============================================================================*/
+void quicksort_wrapper(int* array, int size){
+X
+X    // printf("\nUnsorted array:\n");
+X    // print_array(array,size);
+X
+X    double start_time, elapsed_time;
+X    start_time = omp_get_wtime();
+X
+X    quicksort(array, 0 , size - 1);
+X
+X    elapsed_time = omp_get_wtime() - start_time;
+X    printf("\nWork completed in %f seconds",elapsed_time);
+X
+X    // printf("\nSorted Array:\n");
+X    // print_array(array,size);
+}
+X
+void quicksort(int* array, int low, int high){
+X
+X    if (low < high){
+X
+X        // partition with array[low] as pivot
+X        int s = low; // left of s is lower than pivot
+X        for (int i = s + 1; i <= high; i++){
+X            if (array[i] <= array[low])
+X                swap(&array[++s],&array[i]);
+X        }
+X        swap(&array[low],&array[s]);
+X
+X        // maybe use tasks?:
+X            // https://codereview.stackexchange.com/questions/181441/making-a-faster-parallel-quicksort
+X            // https://github.com/eduardlopez/quicksort-parallel/blob/master/quicksort-omp.h
+X        // recurse on each half
+X        #pragma omp parallel sections num_threads(NUM_THREADS) 
+X        {
+X            #pragma omp section
+X            quicksort(array, low, s - 1);
+X        
+X            #pragma omp section 
+X            quicksort(array, s + 1, high);
+X        }
+X    }
+}
+X
+void swap(int *a, int *b){
+X    int temp = *a;
+X    *a = *b;
+X    *b = temp;
+}
+X
+/*=============================================================================
+A parallel implementation of matrix multiplication of a square matrix with
+itself.
+=============================================================================*/
+int **matrix_multiply(int **matrix, int size){
+X    double start_time, elapsed_time;
+X    int i, j, k;
+X    int **result = malloc(sizeof(int*) * size);
+X    for(int i = 0; i < size; i++){
+X        result[i] = malloc(sizeof(int*) * size);
+X    }
+X    start_time = omp_get_wtime();
+X    # pragma omp parallel shared (result, matrix) \
+X    private ( i, j, k) num_threads(NUM_THREADS)
+X    {
+X        # pragma omp for
+X        for (i = 0; i < size; i++){
+X            for (j = 0; j < size; j++){
+X                result[i][j] = 0;
+X                for (k = 0; k < size; k++){
+X                    result[i][j] += matrix[i][k] * matrix[k][j];
+X                }
+X            }
+X        }
+X    }
+X    elapsed_time = omp_get_wtime() - start_time;
+X    printf("\nExecution completed in %f seconds",elapsed_time);
+X    return result;
+}
+X
+/*=============================================================================
+A function to print an array.
+=============================================================================*/
+void print_array(int* array, int size){
+X    for (int i = 0; i < size; i++)
+X        printf("%d ",*(array + i));
+}
+X
+/*=============================================================================
+A function to print a matrix.
+=============================================================================*/
+void print_matrix(int **matrix, int size){
+X    for (int i = 0; i < size; i++){
+X        for (int j = 0; j < size; j++)
+X            printf("%d ",matrix[i][j]);
+X        printf("\n");
+X    }
+}
+SHAR_EOF
+  (set 20 20 03 05 23 44 18 'parallel.c'; eval "$shar_touch") &&
+  chmod 0644 'parallel.c'
+if test $? -ne 0
+then ${echo} 'restore of parallel.c failed'
+fi
+  if ${md5check}
+  then (
+       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'parallel.c: MD5 check failed'
+       ) << \SHAR_EOF
+6f29f9b273398a13171c0c3406a89e39  parallel.c
+SHAR_EOF
+  else
+test `LC_ALL=C wc -c < 'parallel.c'` -ne 9448 && \
+  ${echo} 'restoration warning:  size of parallel.c is not 9448'
+  fi
+fi
+# ============= parallel.o ==============
+if test -f 'parallel.o' && test "$first_param" != -c; then
+  ${echo} 'x -SKIPPING parallel.o (file already exists)'
+else
+${echo} 'x - extracting parallel.o (binary)'
+  sed 's/^X//' << 'SHAR_EOF' | uudecode &&
+begin 600 parallel.o
+M?T5,1@(!`0````````````$`/@`!`````````````````````````/`G````
+M`````````$```````$``#0`,`%5(B>5(@^Q`B7W,2(EUP(-]S`-T&TB-/0``
+M``"X`````.@`````OP````#H`````$B+1<!(@\`(2(L`2(G'Z`````")1=1(
+MBT7`2(/`$$B+`$B)Q^@`````B478@WW8`'0,@WW4`W\&@WW4`'DG2(T]````
+M`+@`````Z`````!(C3T`````Z`````"_`````.@`````BT74@_@!#X2<````
+M@_@!?PF%P'0<Z90"``"#^`(/A"H!``"#^`,/A-$!``#I?0(``$B-/0````"X
+M`````.@`````BT78B<?H`````$B)1?@/M@4`````A,!T#$B-/0````#H````
+M``^V!0````"$P'01BU782(M%^(G62(G'Z`````!(C3T`````N`````#H````
+M`$B+1?A(B<?H`````(E%Y.D&`@``2(T]`````+@`````Z`````"+1=B)Q^@`
+M````2(E%^`^V!0````"$P'0,2(T]`````.@`````#[8%`````(3`=!&+5=A(
+MBT7XB=9(B<?H`````.@`````F?=]V(G02)A(C12%`````$B+1?A(`="+`(E%
+MW(M%W(G&2(T]`````+@`````Z`````"+5=R+3=A(BT7XB<Y(B<?H`````(E%
+MX.EA`0``2(T]`````+@`````Z`````"+1=B)Q^@`````2(E%^`^V!0````"$
+MP'0,2(T]`````.@`````#[8%`````(3`=!&+5=A(BT7XB=9(B<?H`````$B-
+M/0````"X`````.@`````BU782(M%^(G62(G'Z``````/M@4`````A,!T#$B-
+M/0````#H``````^V!0````"$P`^$PP```(M5V$B+1?B)UDB)Q^@`````Z:T`
+M``!(C3T`````N`````#H`````(M%V(G'Z`````!(B47H#[8%`````(3`=`Q(
+MC3T`````Z``````/M@4`````A,!T$8M5V$B+1>B)UDB)Q^@`````2(T]````
+M`+@`````Z`````"+5=A(BT7HB=9(B<?H`````$B)1?`/M@4`````A,!T#$B-
+M/0````#H``````^V!0````"$P'06BU782(M%Z(G62(G'Z`````#K`Y#K`9"_
+M"@```.@`````N`````#)PU5(B>5(@^P@B7WLOP````#H`````(G'Z`````"+
+M1>Q(F$C!X`)(B<?H`````$B)1?C'1?0`````ZT'H`````(G!BT7T2)A(C12%
+M`````$B+1?A(C30"NHFU^!2)R/?JP?H-B<C!^!\IPHG0:<"@A@$`*<&)R(D&
+M@T7T`8M%]#M%['RW2(M%^,G#54B)Y5-(@^PXB7W,OP````#H`````(G'Z```
+M``"+1<Q(F$C!X`-(B<?H`````$B)1>C'1=P`````ZRZ+1<Q(F$C!X`.+5=Q(
+M8])(C0S5`````$B+5>A(C1P12(G'Z`````!(B0.#1=P!BT7<.T7,?,K'1>``
+M````ZV;'1>0`````ZU'H`````(G!BT7@2)A(C13%`````$B+1>A(`=!(BP"+
+M5>1(8])(P>("2(TT$+JMB]MHB<CWZL'Z#(G(P?@?*<*)T&G`$"<``"G!B<B)
+M!H-%Y`&+1>0[1<Q\IX-%X`&+1>`[1<Q\DDB+1>A(@\0X6UW#54B)Y4B#["!(
+MB7WHZ`````!(B47P2(M%Z(L`B<9(C3T`````N`````#H`````.@`````2"M%
+M\/)(#RK`\@\0#0````#R#U[!\@\11?A(BT7X2(E%X/(/$$7@2(T]`````+@!
+M````Z`````!(BT7HBP#)PU5(B>5(@^Q02(E]R(EUQ(E5P&1(BP0E*````$B)
+M1?@QP.@`````9D@/?L!(B470BQ4`````BT7`B47LBT7$B47H2(M%R$B)1>!(
+MC47@N0````!(B<9(C3VO!```Z`````#H`````/(/7$70\@\11=A(BT782(E%
+MN/(/$$6X2(T]`````+@!````Z`````"X`````$B+3?AD2#,,)2@```!T!>@`
+M````R<-52(GE2(/L8$B)?;B)=;1D2(L$)2@```!(B47X,<#H`````&9(#W[`
+M2(E%T,=%R`````#K1XM%R)G!ZA\!T(/@`2G0B47,BQ4`````2(M%N$B)1>"+
+M1<R)1>R+1;2)1>A(C47@N0````!(B<9(C3VO!```Z`````"#1<@!BT7(.T6T
+M?+'H`````/(/7$70\@\11=A(BT782(E%J/(/$$6H2(T]`````+@!````Z```
+M``"02(M%^&1(,P0E*````'0%Z`````#)PU5(B>5(@^PP2(E]Z(EUY.@`````
+M9D@/?L!(B47PBT7DC5#_2(M%Z+X`````2(G'Z`````#H`````/(/7$7P\@\1
+M1?A(BT7X2(E%V/(/$$782(T]`````+@!````Z`````"0R<-52(GE2(/L0$B)
+M?<B)=<2)5<!D2(L$)2@```!(B47X,<"+1<0[1<`/C?4```"+1<2)1=B+1=B#
+MP`&)1=SK:XM%W$B82(T4A0````!(BT7(2`'0BQ"+1<1(F$B-#(4`````2(M%
+MR$@!R(L`.<)_-XM%W$B82(T4A0````!(BT7(2`'"@T78`8M%V$B82(T,A0``
+M``!(BT7(2`'(2(G62(G'Z`````"#1=P!BT7<.T7`?HV+1=A(F$B-%(4`````
+M2(M%R$@!PHM%Q$B82(T,A0````!(BT7(2`'(2(G62(G'Z`````"+%0````"+
+M1=B)1?"+1<")1>R+1<2)1>A(BT7(2(E%X$B-1>!!N`````"Y`@```$B)QDB-
+M/?D#``#H`````)!(BT7X9$@S!"4H````=`7H`````,G#54B)Y4B)?>A(B77@
+M2(M%Z(L`B47\2(M%X(L02(M%Z(D02(M%X(M5_(D0D%W#54B)Y5-(@^QH2(E]
+MJ(EUI&1(BP0E*````$B)1>@QP(M%I$B82,'@`TB)Q^@`````2(E%N,=%M```
+M``#K+HM%I$B82,'@`XM5M$ACTDB-#-4`````2(M5N$B-'!%(B<?H`````$B)
+M`X-%M`&+1;0[1:1\RN@`````9D@/?L!(B47`BQ4`````2(M%J$B)1=A(BT6X
+M2(E%T(M%I(E%X$B-1="Y`````$B)QDB-/8T#``#H`````.@`````\@]<1<#R
+M#Q%%R$B+1<A(B468\@\019A(C3T`````N`$```#H`````$B+1;A(BW7H9$@S
+M-"4H````=`7H`````$B#Q&A;7<-52(GE2(/L($B)?>B)=>3'1?P`````ZRV+
+M1?Q(F$B-%(4`````2(M%Z$@!T(L`B<9(C3T`````N`````#H`````(-%_`&+
+M1?P[1>1\RY#)PU5(B>5(@^P@2(E]Z(EUY,=%^`````#K7,=%_`````#K/8M%
+M^$B82(T4Q0````!(BT7H2`'02(L`BU7\2&/22,'B`D@!T(L`B<9(C3T`````
+MN`````#H`````(-%_`&+1?P[1>1\N[\*````Z`````"#1?@!BT7X.T7D?)R0
+MR<-52(GE05132(/L,$B)?<A(BT7(BT`,B47@2(M%R(M`"(E%Y$B+1<A(BP!(
+MB47HBUWDZ`````!!B<3H`````(G&B=B90??\B<&)V)E!]_R)T#G&?%D/K_&)
+M\@'0C1P(.=A]58E%W(M%W$B82(T4A0````!(BT7H2`'0BP`[1>!T"X-%W`$Y
+M7=Q\W.LLZ`````")PHM%W(/``8G&2(T]`````+@`````Z`````#KT[@`````
+M@\$!ZYU(@\0P6T%<7<-52(GE055!5%-(@^PX2(E]N$B+1;A(BP!(B4782(M%
+MN(M`#(E%T$B+1;B+0`B)1=2+1=1$C6C_BUW0Z`````!!B<3H`````(G'08U%
+M`2G8B<+!ZA\!T-'XB<:)\)E!]_R)P8GPF4'W_(G0.<</C)8````/K_F)^@'0
+MC10(.=`/C9$````!P`'8B47,C002`<.+1<Q(F$B-%(4`````2(M%V$@!T(L0
+MBT7,2)A(@\`!2(T,A0````!(BT782`'(BP`YPG\+@T7,`CE=S'S#ZT:+1<Q(
+MF$B#P`%(C12%`````$B+1=A(`<*+1<Q(F$B-#(4`````2(M%V$@!R$B)UDB)
+MQ^@`````Z[RX`````(/!`>E=____2(/$.%M!7$%=7<-52(GE2(/L,$B)?=A(
+MBT78BT`0B47L2(M%V(M`#(E%\$B+1=B+0`B)1?1(BT782(L`2(E%^.@`````
+M@_@!=#.#^`%R!X/X`G00#POH`````.LYZ`````#KX8M%[(U(`8M5\$B+1?B)
+MSDB)Q^@`````Z^"+1>R-4/^+3?1(BT7XB<Y(B<?H`````.O'R<-52(GE0513
+M2(/L,$B)?<A(BT7(2(M`"$B)1>!(BT7(2(L`2(E%Z$B+1<B+0!")1=R+7=SH
+M`````$&)Q.@`````B<:)V)E!]_R)P8G8F4'W_(G0.<8/C!<!```/K_&)\@'0
+MC10(.=`/C1(!``")1=#'1=0`````BT74.T7<?`Z#1=`!.570?.CI\@```(M%
+MT$B82(T,Q0````!(BT7H2`'(2(L`BTW42&/)2,'A`D@!R,<``````,=%V```
+M``"+1=@[1=Q\!H-%U`'KJXM%T$B82(T,Q0````!(BT7H2`'(2(L`BTW42&/)
+M2,'A`D@!R(LPBT702)A(C0S%`````$B+1>!(`<A(BP"+3=A(8\E(P>$"2`'(
+MBPB+1=A(F$B-/,4`````2(M%X$@!^$B+`(M]U$AC_TC!YP)(`?B+``^OR(M%
+MT$B82(T\Q0````!(BT7H2`'X2(L`BWW42&/_2,'G`D@!^`'QB0B#1=@!Z4S_
+M__^X`````(/!`>G<_O__2(/$,%M!7%W#```(````57-A9V4Z(#QO<'1I;VX^
+M(#QA<G)A>2]M871R:7@@<VEZ93X```````I0;&5A<V4@96YT97(@8F5T=&5R
+M(&%R9W5M96YT<RX`"D]P=&EO;G,Z(#`I4F5T=7)N($9I<G-T+"`Q*4QI;F5A
+M<B!396%R8V@L(#(I0G5B8FQE(%-O<G0L(#,I($UA=')I>"!-=6QT:7!L:6-A
+M=&EO;@`*1V5N97)A=&EN9R!!<G)A>2XN+@`*3W)I9VEN86P@07)R87DZ`%)E
+M='5R;FEN9R!F:7)S="XN+@``````"E-E87)C:&EN9R!F;W(@<F%N9&]M;'DM
+M<V5L96-T960@:V5Y.B`E9"XN+@`*0G5B8FQE('-O<G1I;F<@=&AE(&%R<F%Y
+M+BXN``I3;W)T960@07)R87DZ``I'96YE<F%T:6YG($UA=')I>"XN+@`*3W)I
+M9VEN86P@36%T<FEX.@`*375L=&EP;'EI;F<@36%T<FEX+BXN``I-=6QT:7!L
+M:65D($UA=')I>#H`"D9I<G-T.B`E9``*17AE8W5T:6]N('1O;VL@)68@<V5C
+M;VYD<PH`````````"D5X96-U=&EO;B!C;VUP;&5T960@:6X@)68@<V5C;VYD
+M<P`*5V]R:R!C;VUP;&5T960@:6X@)68@<V5C;VYD<P`E9"``````"DME>2!F
+M;W5N9"X@4&]S:71I;VX@/2`E9"!B>2!T:')E860@)60@"@``````````````
+M`("$+D$`1T-#.B`H56)U;G1U(#<N-"XP+3%U8G5N='4Q?C$X+C`T+C$I(#<N
+M-"XP```````4``````````%Z4@`!>!`!&PP'")`!```<````'`````````!4
+M`P```$$.$(8"0PT&`T\##`<(`!P````\`````````(D`````00X0A@)##08"
+MA`P'"```(````%P`````````\P````!!#A"&`D,-!D6#`P+I#`<(````'```
+M`(``````````<P````!!#A"&`D,-!@)N#`<(```<````H`````````"I````
+M`$$.$(8"0PT&`J0,!P@``!P```#``````````,@`````00X0A@)##08"PPP'
+M"```'````.``````````9`````!!#A"&`D,-!@)?#`<(```<``````$`````
+M```Y`0```$$.$(8"0PT&`S0!#`<(`!P````@`0```````"T`````00X0A@)#
+M#09H#`<(````(````$`!`````````0$```!!#A"&`D,-!D6#`P+W#`<(````
+M'````&0!````````4`````!!#A"&`D,-!@)+#`<(```<````A`$```````!_
+M`````$$.$(8"0PT&`GH,!P@``"````"D`0```````,``````00X0A@)##09'
+MC`.#!`*T#`<(`"0```#(`0```````"`!````00X0A@)##09)C0.,!(,%`Q(!
+M#`<(```<````\`$```````"-`````$$.$(8"0PT&`H@,!P@``"`````0`@``
+M`````(<!````00X0A@)##09'C`.#!`-[`0P'"```````````````````````
+M``````````$````$`/'_```````````````````````````#``$`````````
+M```````````````````#``,````````````````````````````#``0`````
+M```````````````````````#``4```````````````````````P````"``$`
+M3@H```````#``````````"0````"``$`#@L````````@`0```````#H````"
+M``$`+@P```````"-`````````$X````"``$`NPP```````"'`0``````````
+M```#``<````````````````````````````#``@`````````````````````
+M```````#``8``````````````````````&@````1``,````````````$````
+M`````'0````1``0````````````!`````````'T````2``$```````````!4
+M`P```````((````0`````````````````````````)@````0````````````
+M`````````````)\````0`````````````````````````*0````0````````
+M`````````````````*D````0`````````````````````````*X````2``$`
+M5`,```````")`````````+T````2``$`?PD```````!0`````````,D````2
+M``$`T`0```````!S`````````"T!```0`````````````````````````-8`
+M```2``$`0P4```````"I`````````.0````2``$`[`4```````#(````````
+M`/`````2``$`W0,```````#S``````````<!```2``$`SPD```````!_````
+M`````!0!```2``$`?@@````````!`0```````"0!```0````````````````
+M`````````$@!```0`````````````````````````"P!```0````````````
+M`````````````#(!```0`````````````````````````#D!```0````````
+M`````````````````#\!```0`````````````````````````$T!```0````
+M`````````````````````%L!```0`````````````````````````&P!```2
+M``$`M`8```````!D`````````'X!```2``$`&`<````````Y`0```````(@!
+M```2``$`40@````````M`````````(T!```0````````````````````````
+M`*0!```0`````````````````````````+@!```0````````````````````
+M`````,L!```0`````````````````````````-X!```0````````````````
+M``````````!P87)A;&QE;"YC`&QI;F5A<E]S96%R8V@N7V]M<%]F;BXP`&)U
+M8F)L95]S;W)T+E]O;7!?9FXN,0!Q=6EC:W-O<G0N7V]M<%]F;BXR`&UA=')I
+M>%]M=6QT:7!L>2Y?;VUP7V9N+C,`3E5-7U1(4D5!1%,`<')I;G1O=70`;6%I
+M;@!?1TQ/0D%,7T]&1E-%5%]404),15\`<')I;G1F`&5X:70`871O:0!P=71S
+M`&=E=%]R86YD7V%R<F%Y`'!R:6YT7V%R<F%Y`')E='5R;E]F:7)S=`!L:6YE
+M87)?<V5A<F-H`&)U8F)L95]S;W)T`&=E=%]R86YD7W-Q=6%R95]M871R:7@`
+M<')I;G1?;6%T<FEX`&UA=')I>%]M=6QT:7!L>0!P=71C:&%R`'-R86YD`&UA
+M;&QO8P!C;&]C:P!O;7!?9V5T7W=T:6UE`$=/35!?<&%R86QL96P`7U]S=&%C
+M:U]C:&M?9F%I;`!Q=6EC:W-O<G1?=W)A<'!E<@!Q=6EC:W-O<G0`<W=A<`!'
+M3TU07W!A<F%L;&5L7W-E8W1I;VYS`&]M<%]G971?;G5M7W1H<F5A9',`;VUP
+M7V=E=%]T:')E861?;G5M`$=/35!?<V5C=&EO;G-?;F5X=`!'3TU07W-E8W1I
+M;VYS7V5N9%]N;W=A:70``!@``````````@````4```#\_________R(`````
+M````!````!$```#\_________RP`````````!````!(```#\_________S\`
+M````````!````!,```#\_________U4`````````!````!,```#\________
+M_W$``````````@````4````D`````````'L`````````!````!$```#\____
+M_____X(``````````@````4```!$`````````(<`````````!````!0```#\
+M_________Y$`````````!````!(```#\_________\D``````````@````4`
+M``"7`````````-,`````````!````!$```#\_________]T``````````@``
+M`!4```#\_________^@``````````@````X```#\__________,`````````
+M`@````4```"L`````````/@`````````!````!0```#\__________\`````
+M`````@````X```#\_________Q0!`````````@```!8```#\_________QL!
+M`````````@````4```"]`````````"4!````````!````!$```#\________
+M_S$!`````````@```!<```#\_________T`!`````````@````4```"7````
+M`````$H!````````!````!$```#\_________U0!`````````@```!4```#\
+M_________U\!`````````@````X```#\_________VH!`````````@````4`
+M``"L`````````&\!````````!````!0```#\_________W8!`````````@``
+M``X```#\_________XL!`````````@```!8```#\_________Y`!````````
+M!````!@```#\_________[@!`````````@````4```#4`````````,(!````
+M````!````!$```#\_________]8!`````````@```!D```#\_________^4!
+M`````````@````4```"7`````````.\!````````!````!$```#\________
+M__D!`````````@```!4```#\_________P0"`````````@````X```#\____
+M_____P\"`````````@````4```"L`````````!0"````````!````!0```#\
+M_________QL"`````````@````X```#\_________S`"`````````@```!8`
+M``#\_________S<"`````````@````4``````0```````$$"````````!```
+M`!$```#\_________U("`````````@```!H```#\_________UD"````````
+M`@````X```#\_________V0"`````````@````4````=`0```````&D"````
+M````!````!0```#\_________W`"`````````@````X```#\_________XD"
+M`````````@```!8```#\_________Y4"`````````@````4````L`0``````
+M`)\"````````!````!$```#\_________ZD"`````````@```!L```#\____
+M_____[0"`````````@````X```#\_________[\"`````````@````4```!"
+M`0```````,0"````````!````!0```#\_________\L"`````````@````X`
+M``#\_________^`"`````````@```!P```#\_________^<"`````````@``
+M``4```!4`0```````/$"````````!````!$```#\_________P(#````````
+M`@```!T```#\_________PT#`````````@````X```#\_________Q@#````
+M`````@````4```!K`0```````!T#````````!````!0```#\_________R0#
+M`````````@````X```#\_________SD#`````````@```!P```#\________
+M_TD#````````!````!X```#\_________V4#````````!````!\```#\____
+M_____VP#````````!````"````#\_________WT#````````!````"$```#\
+M_________X\#````````!````!@```#\_________^\#````````!````!\`
+M``#\__________8#````````!````"````#\_________P<$````````!```
+M`"$```#\_________SL$````````!````"$```#\_________V$$````````
+M!````!@```#\_________]T$````````!````"(```#\__________`$````
+M`````@````4```!_`0```````/H$````````!````!$```#\__________\$
+M````````!````"(```#\_________Q`%`````````@````4````D`@``````
+M`"T%`````````@````4```"*`0```````#<%````````!````!$```#\____
+M_____V4%````````!````",```#\_________W0%`````````@````T```#\
+M_________Z`%````````!````"0```#\_________Z4%````````!````",`
+M``#\_________\,%`````````@````4```"L`0```````,T%````````!```
+M`!$```#\_________^8%````````!````"4```#\_________PL&````````
+M!````",```#\_________S0&`````````@````T```#\_________V`&````
+M````!````"0```#\_________W$&````````!````",```#\_________X\&
+M`````````@````4```"L`0```````)D&````````!````!$```#\________
+M_ZX&````````!````"4```#\_________\0&````````!````",```#\____
+M_____^0&`````````@```"<```#\_________^D&````````!````",```#\
+M_________P<'`````````@````4```#/`0```````!$'````````!````!$`
+M``#\_________[D'`````````@```"@```#\__________@'`````````@``
+M`"@```#\__________X'`````````@````T```#\_________S8(````````
+M!````"D```#\_________TL(````````!````"4```#\_________ZH(````
+M````!````"$```#\_________]X(````````!````"$```#\__________((
+M````````!````",```#\_________P$)`````````@````T```#\________
+M_R\)````````!````"0```#\_________S0)````````!````",```#\____
+M_____U()`````````@````4```"L`0```````%P)````````!````!$```#\
+M_________W0)````````!````"4```#\_________[()`````````@````4`
+M``#M`0```````+P)````````!````!$```#\_________QL*`````````@``
+M``4```#M`0```````"4*````````!````!$```#\_________SL*````````
+M!````!X```#\_________X`*````````!````"H```#\_________X@*````
+M````!````"L```#\_________]H*````````!````"L```#\_________^L*
+M`````````@````4```#T`0```````/4*````````!````!$```#\________
+M_TD+````````!````"H```#\_________U$+````````!````"L```#\____
+M_____Q`,`````````@```"@```#\_________V0,````````!````"P```#\
+M_________WH,````````!````"T```#\_________X$,````````!````"P`
+M``#\_________YH,`````````@```"<```#\_________[,,`````````@``
+M`"<```#\_________^\,````````!````"H```#\__________<,````````
+M!````"L```#\_________R```````````@````(``````````````$``````
+M`````@````(```!4`P```````&```````````@````(```#=`P```````(0`
+M`````````@````(```#0!````````*0``````````@````(```!#!0``````
+M`,0``````````@````(```#L!0```````.0``````````@````(```"T!@``
+M``````0!`````````@````(````8!P```````"0!`````````@````(```!1
+M"````````$0!`````````@````(```!^"````````&@!`````````@````(`
+M``!_"0```````(@!`````````@````(```#/"0```````*@!`````````@``
+M``(```!."@```````,P!`````````@````(````."P```````/0!````````
+M`@````(````N#````````!0"`````````@````(```"[#``````````N<WEM
+M=&%B`"YS=')T86(`+G-H<W1R=&%B`"YR96QA+G1E>'0`+F1A=&$`+F)S<P`N
+M<F]D871A`"YC;VUM96YT`"YN;W1E+D=.52US=&%C:P`N<F5L82YE:%]F<F%M
+M90``````````````````````````````````````````````````````````
+M`````````````````````````````````````"`````!````!@``````````
+M`````````$``````````0@X```````````````````$`````````````````
+M```;````!````$````````````````````!@&0```````*@,````````"@``
+M``$````(`````````!@`````````)@````$````#````````````````````
+MA`X````````$````````````````````!````````````````````"P````(
+M`````P```````````````````(@.`````````0````````````````````$`
+M```````````````````Q`````0````(```````````````````"(#@``````
+M`#`"```````````````````(````````````````````.0````$````P````
+M````````````````N!`````````L`````````````````````0`````````!
+M`````````$(````!`````````````````````````.00````````````````
+M``````````````$```````````````````!7`````0````(`````````````
+M``````#H$````````#`"```````````````````(````````````````````
+M4@````0```!`````````````````````""8```````"``0````````H````(
+M````"``````````8``````````$````"`````````````````````````!@3
+M````````4`0````````+````#0````@`````````&``````````)`````P``
+M``````````````````````!H%P```````/<!```````````````````!````
+M````````````````$0````,`````````````````````````B"<```````!A
+?`````````````````````0``````````````````````
+`
+end
+SHAR_EOF
+  (set 20 20 03 05 23 44 19 'parallel.o'; eval "$shar_touch") &&
+  chmod 0644 'parallel.o'
+if test $? -ne 0
+then ${echo} 'restore of parallel.o failed'
+fi
+  if ${md5check}
+  then (
+       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'parallel.o: MD5 check failed'
+       ) << \SHAR_EOF
+e6430e059cdef7c72fea27c8a405b674  parallel.o
+SHAR_EOF
+  else
+test `LC_ALL=C wc -c < 'parallel.o'` -ne 11056 && \
+  ${echo} 'restoration warning:  size of parallel.o is not 11056'
+  fi
+fi
+# ============= results.ods ==============
+if test -f 'results.ods' && test "$first_param" != -c; then
+  ${echo} 'x -SKIPPING results.ods (file already exists)'
+else
+${echo} 'x - extracting results.ods (binary)'
+  sed 's/^X//' << 'SHAR_EOF' | uudecode &&
+begin 600 results.ods
+M4$L#!!0```@``.8A9E"%;#F*+@```"X````(````;6EM971Y<&5A<'!L:6-A
+M=&EO;B]V;F0N;V%S:7,N;W!E;F1O8W5M96YT+G-P<F5A9'-H965T4$L#!!0`
+M``@``.8A9E`````````````````<````0V]N9FEG=7)A=&EO;G,R+W!R;V=R
+M97-S8F%R+U!+`P04```(``#F(690````````````````&@```$-O;F9I9W5R
+M871I;VYS,B]T;V]L<&%N96PO4$L#!!0```@``.8A9E`````````````````8
+M````0V]N9FEG=7)A=&EO;G,R+VUE;G5B87(O4$L#!!0```@``.8A9E``````
+M```````````?````0V]N9FEG=7)A=&EO;G,R+VEM86=E<R]":71M87!S+U!+
+M`P04```(``#F(690````````````````&````$-O;F9I9W5R871I;VYS,B]F
+M;&]A=&5R+U!+`P04```(``#F(690````````````````&````$-O;F9I9W5R
+M871I;VYS,B]T;V]L8F%R+U!+`P04```(``#F(690````````````````'```
+M`$-O;F9I9W5R871I;VYS,B]A8V-E;&5R871O<B]02P,$%```"```YB%F4```
+M`````````````!H```!#;VYF:6=U<F%T:6]N<S(O<&]P=7!M96YU+U!+`P04
+M```(``#F(690````````````````&@```$-O;F9I9W5R871I;VYS,B]S=&%T
+M=7-B87(O4$L#!!0```@``.8A9E"V;/Y'BA@``(H8```8````5&AU;6)N86EL
+M<R]T:'5M8FYA:6PN<&YGB5!.1PT*&@H````-24A$4@```+T```#_"`,```"3
+MF2=E```"_5!,5$4````;%Q8:(RX7(S0D'!PK+``O-@`W-P`E+STL,34S+"DZ
+M,"HX-3<O.$4Y/$,W00`^0$<W1E=%/@!`-2U(/#1&/4!)2@!+6`!01P!960!+
+M0#E11#E:9@!B6@!F9@!G=0!W9P!V=@!(1T9(3%5-4EQ32T994DQ85E=,6&97
+M6V1;86I:9G5C54ID6U9P7$QP7E%@76)K85IV95EI:&AE;'1J<7AT;&5P;W)X
+M<6MS<G)R=7IT>7Q[=7)\>'9\?'Q=;H!><(1I=X=K?9%R=H%T>X1Q?8MZ?8)P
+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
+MJ,I_F&[;AN6(TJMDDT350Y+42A\`M6]S#TCR;[\<E6Z[F8$UNZ*=A_/$C9V<
+M0,9GU(I*]U4(S@&B'4K*26^,;4'."*/2=E7=1S#605W:X^5NP&3GZJ#HV##Q
+MT-<]!-!6U70)T#`5@K/M:$B<4/,Q`SX?G:<00>ET!"`FEEC9>S2VRW&DI[5X
+MTD+*R$L"/%O>S@G+Q`_'W/^@LBX)FI8\8/?`A.U5!V*H+U))='&0!KL/N%3.
+M4`SE1=@R-PW1OYK;`ZF70Q,0E??V^A2F;SQJ\\3=*5UO5XV-^/?BM[]02P<(
+MQ93_;C,!```L!```4$L!`A0`%```"```YB%F4(5L.8HN````+@````@`````
+M`````````````````&UI;65T>7!E4$L!`A0`%```"```YB%F4```````````
+M`````!P`````````````````5````$-O;F9I9W5R871I;VYS,B]P<F]G<F5S
+M<V)A<B]02P$"%``4```(``#F(690````````````````&@``````````````
+M``".````0V]N9FEG=7)A=&EO;G,R+W1O;VQP86YE;"]02P$"%``4```(``#F
+M(690````````````````&`````````````````#&````0V]N9FEG=7)A=&EO
+M;G,R+VUE;G5B87(O4$L!`A0`%```"```YB%F4````````````````!\`````
+M````````````_````$-O;F9I9W5R871I;VYS,B]I;6%G97,O0FET;6%P<R]0
+M2P$"%``4```(``#F(690````````````````&``````````````````Y`0``
+M0V]N9FEG=7)A=&EO;G,R+V9L;V%T97(O4$L!`A0`%```"```YB%F4```````
+M`````````!@`````````````````;P$``$-O;F9I9W5R871I;VYS,B]T;V]L
+M8F%R+U!+`0(4`!0```@``.8A9E`````````````````<````````````````
+M`*4!``!#;VYF:6=U<F%T:6]N<S(O86-C96QE<F%T;W(O4$L!`A0`%```"```
+MYB%F4````````````````!H`````````````````WP$``$-O;F9I9W5R871I
+M;VYS,B]P;W!U<&UE;G4O4$L!`A0`%```"```YB%F4````````````````!H`
+M````````````````%P(``$-O;F9I9W5R871I;VYS,B]S=&%T=7-B87(O4$L!
+M`A0`%```"```YB%F4+9L_D>*&```BA@``!@`````````````````3P(``%1H
+M=6UB;F%I;',O=&AU;6)N86EL+G!N9U!+`0(4`!0`"`@(`.8A9E"QU%H%G`8`
+M`*(E```*``````````````````\;``!S='EL97,N>&UL4$L!`A0`%``("`@`
+MYB%F4/M@A"(5#@``U-8```L`````````````````XR$``&-O;G1E;G0N>&UL
+M4$L!`A0`%``("`@`YB%F4.?)#CJN`0``:`,```@`````````````````,3``
+M`&UE=&$N>&UL4$L!`A0`%``("`@`YB%F4%^#&S`I!```1R````P`````````
+M````````%3(``'-E='1I;F=S+GAM;%!+`0(4`!0`"`@(`.8A9E"T]VC2!0$`
+M`(,#```,`````````````````'@V``!M86YI9F5S="YR9&902P$"%``4``@(
+M"`#F(690Q93_;C,!```L!```%0````````````````"W-P``345402U)3D8O
+B;6%N:69E<W0N>&UL4$L%!@`````1`!$`900``"TY````````
+`
+end
+SHAR_EOF
+  (set 20 20 03 05 23 44 19 'results.ods'; eval "$shar_touch") &&
+  chmod 0664 'results.ods'
+if test $? -ne 0
+then ${echo} 'restore of results.ods failed'
+fi
+  if ${md5check}
+  then (
+       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'results.ods: MD5 check failed'
+       ) << \SHAR_EOF
+4fd6b4b733930dcbb6dcc3596cd75819  results.ods
+SHAR_EOF
+  else
+test `LC_ALL=C wc -c < 'results.ods'` -ne 15784 && \
+  ${echo} 'restoration warning:  size of results.ods is not 15784'
+  fi
+fi
+if rm -fr ${lock_dir}
+then ${echo} 'x - removed lock directory `'${lock_dir}\''.'
+else ${echo} 'x - failed to remove lock directory `'${lock_dir}\''.'
+  exit 1
+fi
+exit 0

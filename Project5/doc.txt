@@ -1,0 +1,109 @@
+Assignment: COP6616 Project 5
+By: Joseph Allen
+Date: 4/23/2020
+
+-------------------------------------------------------------------------------
+Overview:
+In this project I used the Lua language and libraries to implement several
+parallel functions of various time complexities. Lua does not support true
+multi-processesor computing out-of-the-box, but it can be accomplished with
+external libraries available throught the LuaRocks package manager. Lua does
+provide co-routines for the time-sliced version of concurrency, but this 
+approach would not ultimately take advantage of additional cores to reduce
+program execution times.
+
+Because of this I selected to use the Lua Lanes library, which accomplishes 
+true multi-core processing by running multiple Lua states in parallel and 
+managing communication between them. The threading in Lua Lanes is 
+implemented on OS threads. This approach will suffice for parallel 
+processing on SMP machines. Lua Lanes can be installed simply using the 
+LuaRocks package manager:
+    luarocks install lanes
+
+As for distributed parallel computing on a cluster, Lua Lanes can be used in
+conjunction with the builtin socket library to achieve distributed
+parallelization. Alternatively, one can explore using the ConcurrentLua
+library which claims to support distributed processing.
+
+A comprehensive list of other multitasking options is available here:
+    http://lua-users.org/wiki/MultiTasking
+
+Note that I had a lot of problems installing Lua, LuaRocks, and Lua Lanes
+correctly on my own machine. There were some issues with versioning as well
+as linking all three together correctly. In the end I manually downloaded, 
+built, and installed all three in the same location and explicitly linked them
+together using arguments to the makefiles. The documentation for such issues is
+very sparse, so I hope you have no issues on your end.
+
+-------------------------------------------------------------------------------
+Implementation:
+The code for my project is contained within the p5.lua script.
+The script can be run using:
+    lua p5.lua <args>
+or compiled and executed using (luac.out is default name of compiled result):
+    luac p5.lua && lua luac.out <args>
+
+The required arguments to this program are:
+    1) the option to execute in the range [0,3]
+        - 0 for return first
+        - 1 for linear search
+        - 2 for bubble sort
+        - 3 for matrix multiplication
+    2) the number of integers to generate for processing
+    3) the number of threads to use for processing
+
+To run bubble sort on 50 numbers with 5 threads you can use:
+    lua p5.lua 2 50 5
+
+Note that printing of the results can be enabled or disable (default) using
+the appropriate "output" boolean variable at the top of the program.
+
+-------------------------------------------------------------------------------
+Link to my slideshow presentation on Lua:
+https://docs.google.com/presentation/d/1qCug4sZ05rqXyjPQz-HadB0MgANmv-RocKH2jD4LNfc/edit?usp=sharing
+
+Resources:
+Lua Documentation:
+    https://www.lua.org/docs.html
+LuaRocks Documentation:
+    https://github.com/luarocks/luarocks/wiki/Documentation
+Lua Lanes Code:
+    https://github.com/LuaLanes/lanes
+Lua Lanes Documentation:
+    https://lualanes.github.io/lanes/
+Article about Lanes:
+    https://kreitech.io/blog/20141224/lua-real-multithreading-using-lanes-and-linda/
+
+-------------------------------------------------------------------------------
+Analysis:
+
+Disclaimer 1:
+The only function I could achieve the expected results for was bubble sort.
+I've implemented the threading for return first and linear search exactly 
+as I did for bubble sort, but for some reason both only ever utilize a 
+single core. Bubble sort works fine however and will utilize as many cores as
+you allocate. I noticed this from my execution times as well as from monitoring
+my per CPU core utilization. I'm completely lost here because my threading process
+is exactly the same... it's like Lua just really doesn't want to or is doing
+something behidn the scenes.
+
+Disclaimer 2:
+As for matrix multiplication, I have an implementation of the function but did
+not get around to actually executing it in parallel and recording execution times.
+
+Disclaimer 3:
+I tried getting everything to work on Atlas, but there was an issue installing
+the Lanes library using LuaRocks, which is the backbone of my whole project.
+Trying to install Lanes as usual with LuaRocks brings up permission errors on
+the system. Even when trying to install the library locally I ran into issues.
+Besides not having permissions to play around with the installations on the system,
+I think the issue is either with incompatible versions of the Lua, LuaRocks, Lanes
+trio or improper linkage between them.
+
+What I can say about bubble sort is that it achieved the expected results.
+The graphs in my slideshow presentation show how adding more cores clearly 
+decreased execution time and how each added core offered less of an improvement
+than adding the one before it. Since I could only test on my laptop with 4 cores
+and 8 threads, I could not reach the point where adding more cores actually
+increased execution times. For all tested array sizes, 8 threads offered
+the minimum executions times.

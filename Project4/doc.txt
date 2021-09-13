@@ -1,0 +1,96 @@
+
+		      +---------------------------------------+
+		      |  COP6616 Parallel Computing Project 4 |
+		      +---------------------------------------+
+		      |	     By Joseph Allen on 4/4/20        |
+		      +----------------------------------------
+
+
++----------+
+| Overview |
++----------+
+In this project I implemented several parallel functions using C and CUDA. The 
+functions are of return first, linear search, bubble sort, and matrix 
+multiplication, which have time complexities O(1), O(N), O(N^2), and O(N^3), 
+respectively. 
+
+Since my password for the gpu server at UNF was not working, I tested these
+CUDA functions on my GPU at home, which is a NVIDIA GTX 1070 Ti with 2432 CUDA 
+cores and 8 GB of GDDR5 memory.
+
++-------------+
+| Source Code |
++-------------+
+All of the source code for this project is in a single file called "p4.cu", 
+which has a CUDA-approved file extension. This program can be compiled by the 
+CUDA compiler using the following command:
+	nvcc -o p4 p4.cu
+The executable, named p4, can be executed like so:
+	./p4 <option> <N>
+<option> is an integer argument corresponding to the function to execute. 
+Valid options are: 0) Return first, 1) Linear search, 2) Bubble sort, and 3) 
+Matrix multiplication. <N> is the dimension of the data to generate and use in 
+the chosen function. For options 0, 1, and 2 an array of N items is generated. 
+For option 3 a matrix of shape (N,N) is generated.
+
+Non-CLI arguments include the integer number of GPU threads to utilize and a 
+boolean indicating whether to print out the data and the results of the executed
+function. These arguments can be specified at the top of the program via 
+variables "NUM_THREADS" and "printout", respectively.
+
+Disclaimer:
+There is an issue with matrix multiplcation (option 3) as it is currently
+implemented. It works fine for small examples, but runs into errors with CUDA
+for larger inputs (N > 70). The matrix multiplication itself is okay, but there
+is an error in the process of transferring the matrix to and from the GPU.
+
++------------------------+
+| Experiments & Analysis |
++------------------------+
+To test these functions I ran them multiple times on varying amounts of input 
+data utilizing various numbers of GPU threads. The data collected is in the file
+gpu_results.ods. 
+	**Note that all numerical results are in milliseconds.** 
+The data was collected with the goal of finding the "point of 
+no benefit", where adding more threads did not decrease the runtime of the
+function.
+
+For return first, from the get-go adding more threads did not seem to offer any
+benefit. This is the result we expect since this function always takes constant
+time. The only factor that may vary this result is the overhead of initializing
+more threads, but CUDA is very efficient and there was no difference between
+executing this function on 1 thread vs 200 threads. The only factor that may
+affect these results is the input size, because the larger the input the more
+data must be copied to and from the GPU. But there was no observable difference 
+between 100,000 and 1,000,000 elements.
+
+For linear search, CUDA was very efficient and constantly took advantage of 
+added threads. Even at N = 10,000, CUDA efficiently took advantage of all
+available threads (up to 3200) and reduced runtime. This efficiency made it 
+difficult to find the "point of no benefit" on any N > 1000. For N = 1000, I 
+found that 100 was the optimal number of threads.
+
+For bubble sort, CUDA provided significant speedups compared to OpenMP and MPI
+that we used in previous projects. With N = 100,000 and a single thread, the 
+runtime was almost 70 seconds. But with 1600 threads it was only about 0.5 
+seconds. This result by itself is impressive. For each test the cell with the 
+number of threads that provided the optimal runtime is highlighted yellow. By
+observing these yellow cells for all test you can observe how the optimal # of 
+cores increases w.r.t the input data size (N). 
+
+For matrix multiplication, I had to test on much smaller data than I would have
+liked to due to errors in my implementation of CUDA. I tested on as much data as
+I could (up to 70x70 matrices) and for as many threads as well. Since my 
+parallelization assigns each thread some slice of all the rows, it cannot
+take advantage of any more threads than there are rows. Despite this, I 
+collected the data I could and have some results. The data shows the expected 
+result that increasing the number of threads decreases runtime (even if only
+up to a threshold caused by my implementation).
+
+
+				   +---------+
+				   | The End |
+				   +---------+
+
+
+

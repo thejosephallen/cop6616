@@ -1,0 +1,20 @@
+Project 4 Parallel Computing --- Due 4/2/20 at 23:59
+
+For this project you are to take advantage of GPU's  
+capabilities offered.
+
+
+OPTION 1
+Following the examples provided, construct a matrix multiply
+program, using CUDA for the GPU.  Run your project on a variety
+of matrix sizes.  You should include a discussion of the improved
+efficiency and comment on the relative speed up of your
+implementation. Run your application on GPU, be sure you monitor
+the machine load when collecting your data. 
+
+shar you project and upload the shar file to osprey then turn it
+in with turnin using reepar4 as the turnin code.
+
+OPTION 2
+Implement a parallel quicksort. Algorithms can be found
+online for implementing a GPU quicksort.

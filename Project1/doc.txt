@@ -1,0 +1,105 @@
+
+		      +---------------------------------------+
+		      |  COP6616 Parallel Computing Project 1 |
+		      +---------------------------------------+
+		      |	     By Joseph Allen on 2/20/20       |
+		      +----------------------------------------
+
+
++----------+
+| Overview |
++----------+
+This is a two part project meant to evaluate Java's parallelization capabilites
+utilizing sockets on a SMP machine (Atlas) and a beowulf cluster (Uranus). There
+are separate programs for each machine that can perform several parallelized 
+tasks, such as linear search, bubble sort, and matrix multiplication. 
+
+Included in this submission are source code, raw data from experiments, and this
+documentation/report.
+
++-------------+
+| Source Code |
++-------------+
+UranusClient.java - this program runs the parallelization tasks for this 
+	project. It takes an array size as an argument. Once run, it provides a 
+	menu to the user which prompts for a task to perform. The tasks are:
+		0) Print the array
+		1) Return the first element (O(1))
+		2) Perform linear search (O(N))
+		3) Perform bubble sort (O(N^2))
+		4) Perform matrix multiplication (O(N^3)) (not implemented, yikes!)
+		5) Toggle parallelism (uses all 13 cluster nodes initially)
+		6) Exit
+	When options 1 to 4 are selected, the array or matrix is split into as 	
+	many chunks as there are compute nodes available. A ClientThread is 
+	then created and given a chunk of the data. Each thread is assigned a 
+	specific node in the cluster to create a socket connection with when 
+	created. When run, these threads connect to a node running UranusServer 
+	and send it its data using DataOutputStreams. It first sends the integer
+	corresponding to the menu choice, then a search key if option 2 is used,
+	then the size of the data being sent, and finally the data iteself. Once
+	the server processes the request and returns the appropriate response, 
+	the thread then closes the connection and stores the result for 
+	processing by UranusClient's main thread. Then the wonderful cycle repeats
+	until you are satisfied.
+
+UranusServer.java - this program actually performs the work on Uranus. It
+	listens on a specified port for socket connection requests and spawns a
+	new ServerThread to process any that are accepted. Once connected with 
+	a socket from UranusClient, it reads data and metadata from its 
+	DataInputStream. It then uses a single thread on the node to perform 
+	the requested task. Finally, it sends the appropriate response back to 
+	the client. 
+	      - Note that this program should be running on each of 
+		Uranus'	compute nodes on port 8888.
+
+Atlas.java - this program performs all the tasks for this project on Atlas. The
+	main method is similar to that of UranusClient.java. It similarily 
+	prompts for a task to perform, divides the task as necessary, and then
+	creates several AtlasThreads to perform that work. The main difference
+	here is that there is an additonal menu option to adjust the number of
+	threads to utilize (do not specify more threads than there are elements
+	in the data array or things will not end well for poor Atlas). 
+	      - Note that matrix multiplication is implemented on Atlas, and 
+		any number of threads to perform the task can be specified.
+		Printing of results can also be toggled. Neat!
+
++------------------------+
+| Experiments & Analysis |
++------------------------+
+Atlas:  I tested each function for threads of size T = 1 * 2^[0,1,2,3,4,5,6] 
+	on arrays of size N = 1 * 10^[2,3,4,5] (matrices are of shape N x N). 
+	The execution time of each function is recorded in milliseconds. The 
+	data showed that the number of threads did not matter at all really for 
+	functions with constant time complexity. Functions with linear 
+	complexity were slow to take advantage of the higher thread counts until
+	the array size reached 1 million elements. Functions with quadratic and
+	cubic time complexity made very good use of the threads. For quadratic,
+	the optimal number of threads steadily increased as the size of the data
+	increased. For cubic, the optimal number of threads increased very 
+	quickly, likely quadratically, with the size of the data. These results
+	also prove the concept discussed in class: that more threads are not 
+	always better. This is shown by the performance of linear search 
+	improving with the increase in thread count on an array of size 1000000,
+	until 8 threads, at which point adding more threads actually increases 
+	the total execution time.
+ 
+Uranus: On Uranus I tested the functions on 1 node and on all 13 of them. These
+	tests were run on arrays of size 100, 1000, and 10000. Interestingly, 
+	parallelizing the functions on 13 nodes almost always outperformed 
+	running them on a single node. This is likely due to the fact that in 
+	my implementation, when there are many nodes there are also many threads
+	on the client side transmitting the data to the servers. When there is a
+	single node however, a single thread on the client side must transmit
+	the same amount of data. A fairer comparison would involve also 
+	parallelizing the transmission of data from a single client to a single
+	server. Regardless of this minor detail, I still achieved the expected
+	results: that parallelizing the higher time-complexity functions on the
+	cluster improved performance in the end.
+	
+				   +---------+
+				   | The End |
+				   +---------+
+
+
+

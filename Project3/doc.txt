@@ -1,0 +1,67 @@
+
+		      +---------------------------------------+
+		      |  COP6616 Parallel Computing Project 3 |
+		      +---------------------------------------+
+		      |	     By Joseph Allen on 3/20/20       |
+		      +----------------------------------------
+
+
++----------+
+| Overview |
++----------+
+In this project I implemented parallel functions of various time complexities in
+C using the Message Passing Interface (MPI). The algorithms I tested were return
+first - O(1), linear search - O(N), bubble sort - O(N^2), and matrix 
+multiplication - O(N^3). The functions were tested on both an SMP machine and 
+a Beowulf cluster. 
+
++-------------+
+| Source Code |
++-------------+
+The code for this project is all included in the single file named p3.c.
+I've included a makefile for compiling this source code with the necessary 
+libraries. To run this program, simply run make and then run the resulting 
+executable using MPI's mpirun or mpiexec. Note that the executable takes two 
+command line arguments (in addition to any MPI arguments): 
+	1) option: the option/function to run
+		- 0 = return the first element in the array
+		- 1 = linear search for a random item in the array
+		- 2 = bubble sort the array
+		- 3 = perform matrix multiplication 
+	2) N: the size/length of the array to test on (NxN for matrices)
+This program will execute the desired option and return the execution time.
+The number of cores to use can be specified as a command-line argument to mpirun
+or mpiexec. By default, only the execution times are printed, but the data and
+results can be printed by setting the "printout" variable to true at the top of
+p3.c.
+
++------------------------+
+| Experiments & Analysis |
++------------------------+
+To test these functions, I tested each one on various sizes of data (from 100 to
+1000000) and various numbers of cores (from 1 to 32) on a 32 core SMP 
+machine called Atlas and a 12 machine (4 cores per machine) Beowulf cluster 
+called Uranus. The results of these expirements are included in 
+atlas_results.ods and uranus_results.ods, respectively. For each data size, I've highlighted in yellow the number of cores which achieved the best results for 
+each function.
+
+These highlighted best results show that increasing the number of cores does
+increase performance, but only up to a certain point. The return first function
+however did not benefit from more cores, as the work consistently took a
+constant amount of time. As for linear search, surprisingly MPI is very
+efficient and the benefits of multiple cores was not observable on data sizes 
+up to 1 million. On the other hand, the results are as expected for bubble sort
+and matrix multiplication.
+
+In conclusion, these results follow the patterns we've observed so far with Java
+in project 1 and OpenMP in project 2. Notably, MPI seems much more efficient 
+about transferring data and parallelization than the others. This is clear from 
+the much shorter execution times for pretty much all functions.
+
+
+				   +---------+
+				   | The End |
+				   +---------+
+
+
+
