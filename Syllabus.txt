@@ -1,0 +1,245 @@
+                             Syllabus          Spring 2020
+                        Parallel Computing
+                             COP 6616
+                    6:00 to 8:45 T   15/1104
+        
+INSTRUCTOR:              Dr. Roger Eggen
+EMAIL:                   ree@unf.edu
+OFFICE:                  15/3223
+OFFICE HOURS:            10:15 AM to 1:10 PM   M  W
+                          2:45 PM to 6:00 PM   W
+PHONE:                   620-2985 (front office) 
+                         620-1326 (my office)
+TEXT:     (recommended)  Introduction to High Performance Scientific  
+								 Computing by D. L. Chopp
+                         SIAM, 2019
+OTHER TEXT:(referenced)  Introduction to Parallel Computing. 
+PUBLISHER:               Addison Wesley, ISBN: 0-201-64865-2, 2003.  
+AUTHORS:                 Ananth Grama, Purdue University, W.  
+                         Lafayette, IN 47906 (ayg@cs.purdue.edu) 
+                         Anshul Gupta, IBM T.J. Watson Research Center, 
+                         Yorktown Heights, NY 10598
+                         (anshul@watson.ibm.com) 
+                         George Karypis, University of Minnesota, 
+                         Minneapolis, MN 55455 (karypis@cs.umn.edu) 
+                         Vipin Kumar, University of Minnesota, 
+                         Minneapolis, MN 55455 
+                         (kumar@cs.umn.edu) 
+
+REFERENCE TEXT ONLINE:
+I wasn't able to find the text online, maybe you can.
+
+Prerequisite: COP5615 and COT5405, or equivalent. In this course, 
+topics covered include: parallel models and hardware architectures 
+(shared-memory, message-passing, threads); basic communication 
+operations; concurrency and synchronization techniques; parallel 
+algorithms analysis and design; problem partitioning and mapping; 
+parallel programming paradigms and environments; cluster-based 
+computing; performance and scalability issues; parallel
+simulations; new trends in parallel computing.
+       
+SIGNIFICANT DATES:
+
+  1/8 Wed.  Spring semester class begins
+ 2/26 wed.  Test 1 
+ 4/15 Wed.  Individual research paper presentations 
+            (5 per class 30 minutes each) 
+ 4/22 Wed.  Individual research paper presentations 
+            (5 per class 30 minutes each) 
+ 4/24 Fri.  Spring semester classes end
+ 4/27 Mon.  6 PM - 7:50 PM Final exam
+
+EMAIL
+Students are expected to check their UNF email on a regular basis. 
+UNF email is the official notification source and is the student's
+responsibility to manage.
+
+Documentation of Academic Activity for Financial Aid Purposes
+Student who are not marked as having engaged in academic
+activity by the end of the second week of classes cannot and
+will not be provided federal aid for the course regardless
+of enrollment status.
+
+CONTINUITY OF INSTRUCTION PLANNING 
+In the event of disruption of normal classroom activities due to 
+an emergency or pandemic event, the format for this course may 
+be modified to enable completion of the course. In that event, 
+you will be provided with an addendum to this syllabus that 
+will supersede this version.
+
+GRADE DETERMINATION     
+
+1)  2 tests 
+All tests will be comprehensive, but will emphasize the most 
+recent material. You are responsible for all material given 
+in class and covered in the text for each test. It is strongly 
+suggested that you take the exam on the day given. If you must 
+take it late, a new exam will be created. If you know that 
+you must be absent the day of the exam, make arrangements to 
+take it early.
+
+2) Some homework assignments will be given and will be
+collected. Homework will be assigned with definite due
+dates. No late homework will be accepted for any reason,
+but again you can hand it in early. Collected homework 
+will be graded and will count toward your final grade. 
+Homework should be submitted only electronically via 
+turnin in much the same way projects are submitted. The
+turnin code will be announced with the homework assignment
+in the public directory.
+
+3) Quizzes will be given every Wednesday at the end of class.
+Quizzes cannot be made up if missed, but can be taken early if
+arrangements are made.  
+
+4) Research project and presentation is required.
+
+5) Programming Projects are required. You are expected
+to write your programs in Linux on uranus and atlas.
+Exact submission procedures will be determined. One and two 
+day late programs will be accepted with a 10% or 20% of the 
+earned score penalty. Programs handed in after 2 days will 
+not be accepted. Note, turnin will display the 2 day late 
+date, the actual on time date is two days earlier. There will 
+be no exceptions to this date stamp. Each project is expected 
+to be professionally done including the following:
+ 
+     1. Source code listing.
+     2. Your test data and results.
+     3. Thorough documentation 
+        A description of the project, files to be read, files 
+        generated, and general solution technique are to be
+        included. A careful explanation of how to execute the
+        project must be included.
+
+ 
+     Your project will be graded on the following criteria:
+ 
+      pts.    area
+      20  - 1.   Working code*.
+      5   - 2.   Documentation as indicated above
+
+
+     * If the program won't compile, you will receive 0 for the
+     project.
+
+Note, programs that are identical beyond coincidence will
+all be  given 0 for the project or be cause for failure of
+the course.  You are responsible for the security of your
+program, set proper file permissions.
+
+Programs are due at midnight of the specified day.
+Electronic time stamp provided by turnin will determine
+time of submission. This may be off by a few minutes so be
+careful.
+
+No type of academic dishonesty will be tolerated. Please refer to
+UNF's Academic Integristy Code published at
+http://www.unf.edu/catalog/policies/academic_integrity/
+
+Computer Accounts are private and the material contained on 
+the computer must be used only be the owner. One person, the 
+owner, is permitted to use an account. Computer security is an 
+important issue and should be regarded as such. Be sure to set 
+your password and permissions to directories and files. Violation 
+of files and misuse of computer accounts can result in failure of
+the class, failure of the project, cancellation of accounts or 
+expulsion from the University. Be sure you understand and use the
+chmod command. Please visit the Florida Computer Crimes Act at
+
+http://www.unf.edu/its/polproc/Computer_Crimes.aspx 
+
+which states that many misuses of the computer is a felony.
+
+Attendence is required and roll will be taken. 
+
+You must receive a passing grade on 60% of the projects in
+order to pass the class.  If your overall average is 70%
+and you have completed 1 of 6 programs, for example, you
+will fail the course.
+
+You are responsible for all material given in classes that
+you miss. All handouts and assignments will exist in the
+public directory (/var/public/cop6616/ree), therefore you
+should check the contents of this directory frequently. 
+Blackboard will also be used to hold documents.
+The public directory is accessible via the web through
+www.unf.edu/~ree, follow the links.
+
+No use of tabacco products, including e-cigarettes, are permitted in
+the classroom at anytime, including before, during, and after class. 
+
+No use of cell phones are permitted in class 
+If you must answer a text or call, please excuse yourself
+from the class. 
+ 
+Any questions on grading of tests, homework, or projects 
+must be presented within 1 week after material is returned.
+Questions asked later than 1 week will not be considered. 
+ 
+
+GRADE COMPUTATION
+
+Your average will be computed as a straight percentage.
+That is, points earned divided by points possible.  There
+will be no distinction between test points, quiz points, or 
+program points.
+
+You should keep track of your score allowing you to know
+your current standing in the class.  I will have your
+current averages with me at each class meeting.  You are
+welcome to check your average after class.  A typical
+semester will have 2 tests at 100 points each, 1
+program at 100 points, 8 quizzes, and a research paper
+of 50 points.
+
+This is only an example, we may have additional programs or
+vary slightly from the above model.
+
+                            Grade Scale 
+        
+                          A    90 - 100%
+                          B+   85 - 89.9%
+                          B    80 - 84.9%
+                          C+   75 - 79.9%
+                          C    70 - 74.9%
+                          D    60 - 69%
+                          F    0  - 59%
+
+
+Note: Computer Accounts are private and the material contained on 
+the computer must be used only be the owner. One person, the 
+owner, is permitted to use an account. Computer security is an 
+important issue and should be regarded as such. Be sure to set 
+your password and permissions to directories and files. Violation 
+of files and misuse of computer accounts can result in failure of
+the class, failure of the project, cancellation of accounts or 
+expulsion from the University. Be sure you understand and use the
+chmod command.
+
+
+ACCOMMODATIONS -- DRC (Disability Resource Center)
+
+Students with disabilities who seek reasonable accommodations
+in the classroom or other aspects of performing their
+coursework must first register with the UNF Disability
+Resource Center (DRC) located in Building 10, Room 1201.
+DRC staff members work with students to obtain required
+documentation of disability and to identify appropriate
+accommodations as required by applicable disability laws
+including the Americans with Disabilities Act (ADA). After
+receiving all necessary documentation, the DRC staff
+determines whether a student qualifies for services with the
+DRC and if so, the accommodations the student will be
+provided. DRC staff then prepares a letter for the student
+to provide faculty advising them of approved accommodations.
+For further information, contact the DRC by phone (904)
+620-2769, email (drc@unf.edu), or visit the DRC website
+(http://www.unf.edu/drc). 
+
+Military and veteran students may need both physical, 
+emotional, and academic accommodations. Contact 
+Military and Veterans' Resource Center, by phone at
+(904) 620-5131 or by e-mail at mvrc@unf.edu.
+
+

@@ -1,0 +1,11 @@
+Q: How do you implement threads in openMP
+A: with code
+	- https://www.geeksforgeeks.org/openmp-hello-world-program/
+
+Q: What does valgrind do?
+A: Valgrind is a programming tool for memory debugging, memory leak detection, and profiling
+	- https://en.wikipedia.org/wiki/Valgrind
+
+Q: What is Flynn's taxonomy 
+A: Multiple Processor Organization -> (SISD,SIMD,MISD,MIMD)
+	- https://en.wikipedia.org/wiki/Flynn's_taxonomy

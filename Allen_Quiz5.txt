@@ -1,0 +1,54 @@
+Parallel Processing  quiz 5  3/25/20 Name = Joseph Allen
+
+1. Which typically has more processing units, a CPU or GPU?
+
+GPUs typically have more processing units.
+
+-------------------------------------------------------------------------------
+2. Which is typically more efficient, cuda on NVIDA or API using
+OpenCL?
+
+CUDA is typically more efficient since it is designed specifically for
+NVIDA devices. OpenCL is designed to support all variants of GPUS 
+and as a result loses out on some performance due to the additional
+complexity of supporting a heterogeneous architecture. CUDA on the 
+other hand is optimized for homogenous NVIDA-device architectures.
+In terms of development efficiency, it seems OpenCL is much more
+difficult to program than CUDA, so CUDA is more efficient in this
+regard.
+
+-------------------------------------------------------------------------------
+3. The graphics card has its own memory, as does the CPU.
+Can the CPU access directly (via a pointer or and
+identifier) the GPU's memory?
+
+No, only the GPU cores can access the GPU memory directly. The CPU
+must receive the data from the GPU before accessing it. CUDA exists
+to facilitate this communication.
+
+-------------------------------------------------------------------------------
+4. The graphics card has its own memory, as does the CPU.
+Can the GPU access directly (via a pointer or and
+identifier) the CPU's memory?
+
+No, the GPU can only access its own memory. It has no knowledge of
+the CPU's memory unless it is explicitly copied over to it.
+
+-------------------------------------------------------------------------------
+5. The GPU's functions are typically called kernal
+functions. How does the CPU invoke a GPU function. Give a
+specific example.
+
+The CPU invokes a GPU function when it comes across it while executing 
+the code in which such a CUDA function resides. 
+
+A kernel function called hello is launched like so:
+hello<<<CUDA arguments>>>(function arguments);
+
+
+
+-------------------------------------------------------------------------------
+6. What is the purpose of nvcc?    
+
+nvcc is the compiler for CUDA programs. It is essentially a wrapper of gcc.
+nvcc handles the CUDA functions while gcc handle the rest of the C code.
